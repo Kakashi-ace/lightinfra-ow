@@ -407,15 +407,14 @@ const handleSearch = () => {
 
 const handleHeroBtn = () => {
   if (activeTab.value === 'research') {
-    router.push('/research/detail')
+    router.push({ name: 'research-detail', params: { id: '1' } })
   }
 }
 
 const handleReadMore = (id) => {
-  if (id === 'paper-1') {
-    router.push('/research/detail')
-  } else if (id === 'paper-2') {
-    router.push('/research/detail2')
+  if (id === 'paper-1' || id === 'paper-2') {
+    const page = id === 'paper-1' ? '1' : '2'
+    router.push({ name: 'research-detail', params: { id: page } })
   } else {
     emit('readMore', id)
   }

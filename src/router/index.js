@@ -9,8 +9,7 @@ import RecruitView from '../views/RecruitView.vue'
 import ContactView from '../views/ContactView.vue'
 import NewsView from '../views/NewsView.vue'
 import ResearchView from '../views/ResearchView.vue'
-import NewsDetailResearch1View from '../views/NewsDetailResearch1View.vue'
-import NewsDetailResearch2View from '../views/NewsDetailResearch2View.vue'
+import NewsDetailResearchView from '../views/NewsDetailResearchView.vue'
 
 const DEFAULT_TITLE = 'LightInfra'
 
@@ -78,15 +77,9 @@ const router = createRouter({
       meta: { title: '最新研究 - LightInfra' }
     },
     {
-      path: '/research/detail',
+      path: '/research/detail/:id',
       name: 'research-detail',
-      component: NewsDetailResearch1View,
-      meta: { title: '研究详情 - LightInfra' }
-    },
-    {
-      path: '/research/detail2',
-      name: 'research-detail2',
-      component: NewsDetailResearch2View,
+      component: NewsDetailResearchView,
       meta: { title: '研究详情 - LightInfra' }
     }
   ]
