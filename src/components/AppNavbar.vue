@@ -4,33 +4,42 @@
       <!-- 左侧 Logo + 导航链接 -->
       <div class="navbar-left">
         <a href="/" class="navbar-logo" aria-label="LightInfra 首页">
-          <svg width="112" height="37" viewBox="0 0 112 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="6,0 28,0 28,26" fill="url(#grad1)" />
-            <polygon points="0,17 22,17 22,37" fill="url(#grad1)" />
-            <rect x="42" y="4" width="4" height="30" fill="white"/>
-            <rect x="52" y="12" width="4" height="22" fill="white"/>
-            <rect x="62" y="8" width="4" height="26" fill="white"/>
-            <rect x="72" y="15" width="4" height="18" fill="white"/>
-            <rect x="82" y="6" width="4" height="28" fill="white"/>
-            <rect x="92" y="11" width="4" height="23" fill="white"/>
-            <defs>
-              <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="white" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="white" stop-opacity="0.3"/>
-              </linearGradient>
-            </defs>
-          </svg>
+          <img src="/media/logo-section.png" alt="LightInfra" />
         </a>
 
         <nav class="navbar-nav" role="navigation" aria-label="主导航">
+          <!-- 产品下拉菜单（antd, hover 弹出） -->
+          <a-dropdown class="nav-dropdown" :trigger="['hover']" placement="bottomLeft">
+            <a
+              href="/products"
+              class="nav-link nav-dropdown-toggle"
+              :class="{ 'nav-link-active': isProductsRoute }"
+            >
+              <span>{{ t('nav.products') }}</span>
+              <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </a>
+            <template #overlay>
+              <a-menu :selected-keys="[currentRoute]">
+                <a-menu-item key="/products">
+                  <a :href="'/products'">{{ t('nav.productCenter') }}</a>
+                </a-menu-item>
+                <a-menu-item v-for="product in productLinks" :key="product.path">
+                  <a :href="product.path">{{ t(product.i18nKey) }}</a>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+
           <a
-            v-for="link in navLinks"
+            v-for="link in otherLinks"
             :key="link.path"
             :href="link.path"
             class="nav-link"
             :class="{ 'nav-link-active': currentRoute === link.path }"
           >
-            {{ link.name }}
+            {{ t(link.i18nKey) }}
           </a>
         </nav>
       </div>
@@ -38,9 +47,9 @@
       <!-- 右侧按钮组 -->
       <div class="navbar-right">
         <!-- 语言下拉菜单 -->
-        <div class="language-dropdown" v-click-outside="closeDropdown">
+        <div class="language-dropdown" v-click-outside="closeDropdowns">
           <button class="btn btn-outline dropdown-toggle" @click="toggleDropdown">
-            <span>{{ t('nav.language') }}</span>
+            <span>{{ currentLanguageName }}</span>
             <svg class="dropdown-arrow" :class="{ 'dropdown-arrow-open': isOpen }" width="12" height="12" viewBox="0 0 12 12" fill="none">
               <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
@@ -68,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
@@ -82,19 +91,34 @@ const props = defineProps({
 
 const isOpen = ref(false)
 
-const navLinks = ref([
-  { name: '产品', path: '/products' },
-  { name: '新闻中心', path: '/news' },
-  { name: '关于 LightInfra', path: '/about' },
-  { name: '联系我们', path: '/contact' }
+const productLinks = ref([
+  { i18nKey: 'footer.opticsgpt', path: '/products/opticsgpt' },
+  { i18nKey: 'footer.ifts', path: '/products/ifts' },
+  { i18nKey: 'footer.instruments', path: '/products/instruments' }
 ])
+
+const otherLinks = ref([
+  { i18nKey: 'footer.newsCenter', path: '/news' },
+  { i18nKey: 'footer.aboutLightInfra', path: '/about' },
+  { i18nKey: 'nav.contact', path: '/contact' }
+])
+
+// 产品相关路由均需高亮「产品」导航项
+const isProductsRoute = computed(() =>
+  props.currentRoute.startsWith('/products')
+)
+
+// 当前语言对应的名称：语言切换按钮 / 语言下拉菜单展示具体语言名
+const currentLanguageName = computed(() =>
+  locale.value === 'en' ? 'English' : '简体中文'
+)
+
+const closeDropdowns = () => {
+  isOpen.value = false
+}
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value
-}
-
-const closeDropdown = () => {
-  isOpen.value = false
 }
 
 const switchLanguage = (lang) => {
@@ -150,8 +174,11 @@ const vClickOutside = {
   flex-shrink: 0;
 }
 
-.navbar-logo svg {
+.navbar-logo img {
   display: block;
+  height: 36px;
+  width: auto;
+  max-width: none;
 }
 
 .navbar-nav {
@@ -173,12 +200,6 @@ const vClickOutside = {
 
 .nav-link:hover {
   color: #FFFFFF;
-}
-
-.nav-link:focus {
-  outline: 2px solid #0073FF;
-  outline-offset: 4px;
-  border-radius: 2px;
 }
 
 .nav-link-active {
@@ -232,10 +253,75 @@ const vClickOutside = {
   border-color: #E0E0E0;
 }
 
-.btn:focus {
-  outline: 2px solid #0073FF;
-  outline-offset: 4px;
+/* 产品下拉菜单 —— antd 覆盖为原深色风格 */
+.nav-dropdown {
+  position: relative;
 }
+
+.nav-dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.nav-dropdown-toggle .dropdown-arrow {
+  transition: transform 0.2s ease;
+}
+
+/* antd dropdown 浮层渲染在 body 下，需用 :global 覆盖成毛玻璃（glassmorphism）风格 */
+:global(.ant-dropdown .ant-dropdown-menu) {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 8px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* 常规项：默认字体色与顶栏导航一致（#BBBBBB），覆盖 antd 默认黑色链接色 */
+:global(.ant-dropdown .ant-dropdown-menu-item) {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: #BBBBBB;
+  padding: 10px 16px;
+}
+
+:global(.ant-dropdown .ant-dropdown-menu-item a) {
+  color: #BBBBBB !important;
+}
+
+:global(.ant-dropdown .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-disabled):hover a),
+:global(.ant-dropdown .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-disabled):focus a) {
+  color: #FFFFFF !important;
+}
+
+:global(.ant-dropdown .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-disabled):hover) {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #FFFFFF !important;
+  border-radius: 0;
+}
+
+:global(.ant-dropdown .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-disabled):focus) {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #FFFFFF !important;
+}
+
+:global(.ant-dropdown .ant-dropdown-menu-item-selected) {
+  background: transparent !important;
+  color: #0073FF;
+}
+
+:global(.ant-dropdown .ant-dropdown-menu-item-selected a) {
+  color: #0073FF !important;
+}
+
+:global(.ant-dropdown .ant-dropdown-menu-item-selected:not(.ant-dropdown-menu-item-disabled):hover) {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #0073FF !important;
+}
+
 
 /* 语言下拉菜单 */
 .language-dropdown {
