@@ -8,8 +8,7 @@
 import AboutPage from '../components/AboutPage.vue'
 
 const handleStart = (product) => {
-  // 跳转到资源页面开始使用
-  window.location.href = '/resources'
+  // 资源说明页已移除，开始使用跳转目标待定
 }
 </script>
 

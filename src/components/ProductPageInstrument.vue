@@ -231,7 +231,6 @@ const emit = defineEmits(['navigate', 'start', 'tabChange'])
 const navLinks = [
   { name: '产品', path: '/products', active: true },
   { name: '新闻中心', path: '/news', active: false },
-  { name: '资源', path: '/resources', active: false },
   { name: '关于 LightInfra', path: '/about', active: false },
   { name: '联系我们', path: '/contact', active: false }
 ]

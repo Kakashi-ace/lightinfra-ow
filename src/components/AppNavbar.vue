@@ -86,7 +86,6 @@ const isOpen = ref(false)
 const navLinks = ref([
   { name: '产品', path: '/products' },
   { name: '新闻中心', path: '/news' },
-  { name: '资源', path: '/resources' },
   { name: '关于 LightInfra', path: '/about' },
   { name: '联系我们', path: '/contact' }
 ])
