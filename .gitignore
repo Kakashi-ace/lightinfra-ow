@@ -1,0 +1,19 @@
+# ===== 依赖 =====
+node_modules/
+
+# ===== 构建产物 =====
+dist/
+
+# ===== 媒体素材：全部不纳入版本控制 =====
+public/media/
+
+# ===== 系统/编辑器等杂项 =====
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.local
+*.log
+
+# ===== 工具会话/临时状态 =====
+.reasonix/
