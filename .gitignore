@@ -3,6 +3,7 @@ node_modules/
 
 # ===== 构建产物 =====
 dist/
+.vite/
 
 # ===== 媒体素材：全部不纳入版本控制 =====
 public/media/
