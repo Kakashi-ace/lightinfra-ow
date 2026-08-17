@@ -9,17 +9,17 @@
         <div class="bg-overlay"></div>
       </div>
       <div class="hero-content">
-        <h1 class="hero-title">智起光学 创见未来</h1>
-        <p class="hero-desc">基于光学大模型与智能体技术，光之宇正在推动光学研发、测试与运维从人工经验驱动迈向智能化时代</p>
-        <a href="/getting-started" class="hero-btn">开始使用</a>
+        <h1 class="hero-title">{{ t('home.heroTitle') }}</h1>
+        <p class="hero-desc">{{ t('home.heroDesc') }}</p>
+        <a href="/getting-started" class="hero-btn">{{ t('common.startUsing') }}</a>
       </div>
     </section>
 
     <!-- Section 2: 平台能力架构图 -->
     <section class="platform-section">
       <div class="platform-header">
-        <h2>让复杂光学系统实现智能化</h2>
-        <p>以光学垂域大模型为核心，融合专业知识、智能体与工程数据，赋能光学设计、仪器测试、器件标定与网络运维，推动光学产业从经验驱动迈向智能驱动。</p>
+        <h2>{{ t('home.platformTitle') }}</h2>
+        <p>{{ t('home.platformDesc') }}</p>
       </div>
 
       <div class="platform-diagram">
@@ -27,15 +27,15 @@
         <div class="layer rd-layer">
           <div class="layer-outer">
             <div class="layer-inner">
-              <div class="layer-label">R&D 研发</div>
+              <div class="layer-label">{{ t('home.rdLabel') }}</div>
               <div class="layer-nodes">
                 <div class="node">
                   <span class="node-dot"></span>
-                  <span class="node-text">光学设计</span>
+                  <span class="node-text">{{ t('home.rdOpticalDesign') }}</span>
                 </div>
                 <div class="node">
                   <span class="node-dot"></span>
-                  <span class="node-text">器件仿真</span>
+                  <span class="node-text">{{ t('home.rdDeviceSim') }}</span>
                 </div>
               </div>
             </div>
@@ -50,16 +50,16 @@
         <div class="layer platform-layer">
           <div class="layer-outer platform-outer">
             <div class="layer-inner platform-inner">
-              <div class="platform-title">智能光学平台</div>
+              <div class="platform-title">{{ t('home.platformName') }}</div>
               <div class="platform-sub">
                 <div class="platform-sub-item">
-                  <div class="platform-sub-label">OpticsGPT 大模型</div>
-                  <div class="platform-capability">专业垂域大模型能力</div>
+                  <div class="platform-sub-label">{{ t('home.gptLabel') }}</div>
+                  <div class="platform-capability">{{ t('home.gptCap') }}</div>
                 </div>
                 <div class="platform-divider"></div>
                 <div class="platform-sub-item">
-                  <div class="platform-sub-label">光学智能体</div>
-                  <div class="platform-capability">智能体协作能力</div>
+                  <div class="platform-sub-label">{{ t('home.agentLabel') }}</div>
+                  <div class="platform-capability">{{ t('home.agentCap') }}</div>
                 </div>
               </div>
             </div>
@@ -74,23 +74,23 @@
         <div class="layer production-layer">
           <div class="layer-outer">
             <div class="layer-inner">
-              <div class="layer-label">产线 测试与运维</div>
+              <div class="layer-label">{{ t('home.prodLabel') }}</div>
               <div class="layer-nodes production-nodes">
                 <div class="node">
                   <span class="node-dot"></span>
-                  <span class="node-text">光谱标定</span>
+                  <span class="node-text">{{ t('home.prodSpectrumCal') }}</span>
                 </div>
                 <div class="node">
                   <span class="node-dot"></span>
-                  <span class="node-text">波前测试</span>
+                  <span class="node-text">{{ t('home.prodWavefrontTest') }}</span>
                 </div>
                 <div class="node">
                   <span class="node-dot"></span>
-                  <span class="node-text">链路仿真</span>
+                  <span class="node-text">{{ t('home.prodLinkSim') }}</span>
                 </div>
                 <div class="node">
                   <span class="node-dot"></span>
-                  <span class="node-text">网络运维</span>
+                  <span class="node-text">{{ t('home.prodNetOpm') }}</span>
                 </div>
               </div>
             </div>
@@ -110,9 +110,9 @@
             <div class="bar bar-gray"></div>
           </div>
           <div class="opticsgpt-text">
-            <h2 class="opticsgpt-title">OpticsGPT</h2>
-            <p class="opticsgpt-desc">面向光学产业的垂域大模型，为科研、研发与工程应用提供专业智能能力</p>
-            <a href="/products/opticsgpt" class="opticsgpt-btn">开始使用</a>
+            <h2 class="opticsgpt-title">{{ t('home.opticsgptTitle') }}</h2>
+            <p class="opticsgpt-desc">{{ t('home.opticsgptDesc') }}</p>
+            <a href="/products/opticsgpt" class="opticsgpt-btn">{{ t('common.startUsing') }}</a>
           </div>
         </div>
         <!-- 右栏 -->
@@ -126,47 +126,47 @@
     <section class="research-section">
       <div class="section-header-row">
         <div class="section-header-left">
-          <h2>最新研究</h2>
-          <p>前言技术解读·学术研究·工程实践</p>
+          <h2>{{ t('home.researchTitle') }}</h2>
+          <p>{{ t('home.researchDesc') }}</p>
         </div>
-        <a href="/news" class="btn-medium">开始使用</a>
+        <a href="/news" class="btn-medium">{{ t('common.startUsing') }}</a>
       </div>
       <div class="news-cards">
         <div class="news-card">
           <div class="card-image" :style="{ backgroundImage: `url(${images.research01})` }"></div>
           <div class="card-body">
             <div class="card-meta">
-              <span class="card-tag">文章</span>
+              <span class="card-tag">{{ t('home.articleTag') }}</span>
               <span class="card-date">2026-01-01</span>
             </div>
-            <h3 class="card-title">全自研国产！交大发布这一AI大模型</h3>
-            <p class="card-excerpt">1月25日，Optics GPT光领域垂直大模型发布会在上海交通大学...</p>
+            <h3 class="card-title">{{ t('home.researchTitle1') }}</h3>
+            <p class="card-excerpt">{{ t('home.researchExcerpt1') }}</p>
           </div>
-          <a href="#" class="card-btn">申请演示</a>
+          <a href="#" class="card-btn">{{ t('common.applyDemo') }}</a>
         </div>
         <div class="news-card">
           <div class="card-image" :style="{ backgroundImage: `url(${images.research02})` }"></div>
           <div class="card-body">
             <div class="card-meta">
-              <span class="card-tag">文章</span>
+              <span class="card-tag">{{ t('home.articleTag') }}</span>
               <span class="card-date">2026-01-01</span>
             </div>
-            <h3 class="card-title">全自研国产！交大发布这一AI大模型</h3>
-            <p class="card-excerpt">1月25日，Optics GPT光领域垂直大模型发布会在上海交通大学...</p>
+            <h3 class="card-title">{{ t('home.researchTitle1') }}</h3>
+            <p class="card-excerpt">{{ t('home.researchExcerpt1') }}</p>
           </div>
-          <a href="#" class="card-btn">申请演示</a>
+          <a href="#" class="card-btn">{{ t('common.applyDemo') }}</a>
         </div>
         <div class="news-card">
           <div class="card-image" :style="{ backgroundImage: `url(${images.research03})` }"></div>
           <div class="card-body">
             <div class="card-meta">
-              <span class="card-tag">文章</span>
+              <span class="card-tag">{{ t('home.articleTag') }}</span>
               <span class="card-date">2026-01-01</span>
             </div>
-            <h3 class="card-title">全自研国产！交大发布这一AI大模型</h3>
-            <p class="card-excerpt">1月25日，Optics GPT光领域垂直大模型发布会在上海交通大学...</p>
+            <h3 class="card-title">{{ t('home.researchTitle1') }}</h3>
+            <p class="card-excerpt">{{ t('home.researchExcerpt1') }}</p>
           </div>
-          <a href="#" class="card-btn">申请演示</a>
+          <a href="#" class="card-btn">{{ t('common.applyDemo') }}</a>
         </div>
       </div>
     </section>
@@ -175,47 +175,47 @@
     <section class="news-section">
       <div class="section-header-row">
         <div class="section-header-left">
-          <h2>新闻动态</h2>
-          <p>了解 LightInfra 的公司动态和产品发布</p>
+          <h2>{{ t('home.newsTitle') }}</h2>
+          <p>{{ t('home.newsDesc') }}</p>
         </div>
-        <a href="/news" class="btn-medium">开始使用</a>
+        <a href="/news" class="btn-medium">{{ t('common.startUsing') }}</a>
       </div>
       <div class="news-layout">
         <div class="news-featured">
           <div class="news-featured-image" :style="{ backgroundImage: `url(${images.news})` }"></div>
           <div class="news-featured-body">
             <div class="card-meta">
-              <span class="card-tag">会议</span>
+              <span class="card-tag">{{ t('home.meetingTag') }}</span>
               <span class="card-date">2026-01-01</span>
             </div>
-            <h3 class="news-featured-title">上海交大义理林教授团队发布智能光传输开源仿真平台</h3>
-            <p class="news-featured-excerpt">2023年1月6日，由中国通信学会光通信委员会、鹏城实验室、区域光纤通信网与新型光通信系统国家重点实验室联合主办的智能光传输专...</p>
+            <h3 class="news-featured-title">{{ t('home.newsFeaturedTitle') }}</h3>
+            <p class="news-featured-excerpt">{{ t('home.newsFeaturedExcerpt') }}</p>
           </div>
         </div>
         <div class="news-list">
           <div class="news-item">
             <div class="card-meta">
-              <span class="card-tag">会议</span>
+              <span class="card-tag">{{ t('home.meetingTag') }}</span>
               <span class="card-date">2026-01-01</span>
             </div>
-            <h3 class="news-item-title">上海交大义理林教授团队发布智能光传输开源仿真平台</h3>
-            <p class="news-item-excerpt">由鹏城实验室与区域光纤通信网联合发布...</p>
+            <h3 class="news-item-title">{{ t('home.newsFeaturedTitle') }}</h3>
+            <p class="news-item-excerpt">{{ t('home.newsItemExcerpt') }}</p>
           </div>
           <div class="news-item">
             <div class="card-meta">
-              <span class="card-tag">会议</span>
+              <span class="card-tag">{{ t('home.meetingTag') }}</span>
               <span class="card-date">2026-01-01</span>
             </div>
-            <h3 class="news-item-title">上海交大义理林教授团队发布智能光传输开源仿真平台</h3>
-            <p class="news-item-excerpt">由鹏城实验室与区域光纤通信网联合发布...</p>
+            <h3 class="news-item-title">{{ t('home.newsFeaturedTitle') }}</h3>
+            <p class="news-item-excerpt">{{ t('home.newsItemExcerpt') }}</p>
           </div>
           <div class="news-item">
             <div class="card-meta">
-              <span class="card-tag">会议</span>
+              <span class="card-tag">{{ t('home.meetingTag') }}</span>
               <span class="card-date">2026-01-01</span>
             </div>
-            <h3 class="news-item-title">上海交大义理林教授团队发布智能光传输开源仿真平台</h3>
-            <p class="news-item-excerpt">由鹏城实验室与区域光纤通信网联合发布...</p>
+            <h3 class="news-item-title">{{ t('home.newsFeaturedTitle') }}</h3>
+            <p class="news-item-excerpt">{{ t('home.newsItemExcerpt') }}</p>
           </div>
         </div>
       </div>
@@ -223,13 +223,17 @@
 
     <!-- Section 6: CTA 底部行动号召 -->
     <section class="cta-section">
-      <h2 class="cta-title">AI For Optics，立即试用</h2>
-      <a href="/join" class="btn-large">加入我们</a>
+      <h2 class="cta-title">{{ t('home.ctaTitle') }}</h2>
+      <a href="/join" class="btn-large">{{ t('home.joinUs') }}</a>
     </section>
   </div>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 // 首页图片路径（public 目录下的静态资源）
 const images = {
   opticsgpt: '/media/ProductPage-OpticsGPT-hero.png',

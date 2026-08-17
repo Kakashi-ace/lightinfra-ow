@@ -9,7 +9,7 @@
         :class="{ 'tab-item-active': activeTab === tab }"
         @click="handleTabClick(tab)"
       >
-        {{ tab }}
+        {{ t(tab) }}
       </button>
     </div>
 
@@ -23,7 +23,7 @@
         v-model="searchKeyword"
         type="text"
         class="search-input"
-        placeholder="想要查找什么？"
+        :placeholder="t('resourceSubNav.searchPlaceholder')"
         @focus="isSearchFocused = true"
         @blur="isSearchFocused = false"
         @keyup.enter="handleSearch"
@@ -34,12 +34,15 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // Props: 当前激活的标签
 const props = defineProps({
   activeTab: {
     type: String,
-    default: '下载'
+    default: 'resourceSubNav.download'
   }
 })
 
@@ -49,8 +52,8 @@ const emit = defineEmits([
   'search'
 ])
 
-// 标签列表
-const tabs = ['下载', '文档', '帮助']
+// 标签列表（i18n key）
+const tabs = ['resourceSubNav.download', 'resourceSubNav.docs', 'resourceSubNav.help']
 
 // 搜索相关状态
 const searchKeyword = ref('')

@@ -1,42 +1,6 @@
 <template>
   <div class="instrument-product-page">
-    <!-- 1. 顶部导航栏 -->
-    <header class="page-header">
-      <div class="header-container">
-        <div class="header-left">
-          <a href="/" class="header-logo" aria-label="LightInfra 首页">
-            <svg width="112" height="37" viewBox="0 0 112 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="6,0 28,0 28,26" fill="#FFFFFF" />
-              <polygon points="0,17 22,17 22,37" fill="#FFFFFF" />
-              <rect x="42" y="4" width="4" height="30" fill="#FFFFFF"/>
-              <rect x="52" y="12" width="4" height="22" fill="#FFFFFF"/>
-              <rect x="62" y="8" width="4" height="26" fill="#FFFFFF"/>
-              <rect x="72" y="15" width="4" height="18" fill="#FFFFFF"/>
-              <rect x="82" y="6" width="4" height="28" fill="#FFFFFF"/>
-              <rect x="92" y="11" width="4" height="23" fill="#FFFFFF"/>
-            </svg>
-          </a>
-          <nav class="header-nav" role="navigation">
-            <a
-              v-for="link in navLinks"
-              :key="link.path"
-              :href="link.path"
-              class="nav-link"
-              :class="{ 'nav-link-active': link.active }"
-              @click.prevent="handleNavClick(link.path)"
-            >
-              {{ link.name }}
-            </a>
-          </nav>
-        </div>
-        <div class="header-right">
-          <a href="/demo" class="btn btn-outline">申请演示</a>
-          <a href="/start" class="btn btn-filled" @click.prevent="handleStart">开始使用</a>
-        </div>
-      </div>
-    </header>
-
-    <!-- 2. Hero 区 -->
+    <!-- 1. Hero 区 -->
     <section class="hero-section">
       <div class="hero-bg">
         <div class="hero-gradient"></div>
@@ -49,9 +13,9 @@
       </div>
       <div class="hero-content">
         <div class="hero-left">
-          <h1 class="hero-title">{{ pageData.heroTitle }}</h1>
-          <p class="hero-desc">{{ pageData.heroDesc }}</p>
-          <button class="hero-btn" @click="handleStart">开始使用</button>
+          <h1 class="hero-title">{{ t('product.instrument.heroTitle') }}</h1>
+          <p class="hero-desc">{{ t('product.instrument.heroDesc') }}</p>
+          <button class="hero-btn" @click="handleStart">{{ t('common.startUsing') }}</button>
         </div>
         <div class="hero-right">
           <div class="deco-cards">
@@ -65,13 +29,13 @@
 
     <!-- 3. 描述区块 -->
     <section class="desc-section">
-      <h2 class="desc-title">{{ pageData.descTitle }}</h2>
-      <p class="desc-text">{{ pageData.descText }}</p>
+      <h2 class="desc-title">{{ t('product.instrument.descTitle') }}</h2>
+      <p class="desc-text">{{ t('product.instrument.descText') }}</p>
     </section>
 
     <!-- 4. 场景特性区 -->
     <section class="scenes-section">
-      <h2 class="section-title">{{ pageData.scenesTitle }}</h2>
+      <h2 class="section-title">{{ t('product.instrument.scenesTitle') }}</h2>
       <div class="scenes-grid">
         <div
           v-for="(scene, index) in pageData.scenes"
@@ -96,8 +60,8 @@
     <!-- 5. 优势特点区 -->
     <section class="advantages-section">
       <div class="advantages-header">
-        <h2 class="section-title-left">{{ pageData.advantagesTitle }}</h2>
-        <button class="advantage-btn" @click="handleStart">开始使用</button>
+        <h2 class="section-title-left">{{ t('product.instrument.advantagesTitle') }}</h2>
+        <button class="advantage-btn" @click="handleStart">{{ t('common.startUsing') }}</button>
       </div>
       <div class="advantages-grid">
         <div
@@ -115,69 +79,18 @@
     <!-- 6. CTA 区 -->
     <section class="cta-section">
       <div class="cta-bg"></div>
-      <h2 class="cta-title">{{ pageData.ctaTitle }}</h2>
-      <button class="cta-btn" @click="handleStart">开始使用</button>
+      <h2 class="cta-title">{{ t('product.instrument.ctaTitle') }}</h2>
+      <button class="cta-btn" @click="handleStart">{{ t('common.startUsing') }}</button>
     </section>
 
-    <!-- 7. 页脚 -->
-    <footer class="page-footer">
-      <div class="footer-container">
-        <div class="footer-left">
-          <svg class="footer-logo" width="205" height="68" viewBox="0 0 112 37" fill="none">
-            <polygon points="6,0 28,0 28,26" fill="#FFFFFF" />
-            <polygon points="0,17 22,17 22,37" fill="#FFFFFF" />
-            <rect x="42" y="4" width="4" height="30" fill="#FFFFFF"/>
-            <rect x="52" y="12" width="4" height="22" fill="#FFFFFF"/>
-            <rect x="62" y="8" width="4" height="26" fill="#FFFFFF"/>
-            <rect x="72" y="15" width="4" height="18" fill="#FFFFFF"/>
-            <rect x="82" y="6" width="4" height="28" fill="#FFFFFF"/>
-            <rect x="92" y="11" width="4" height="23" fill="#FFFFFF"/>
-          </svg>
-          <div class="contact-info">
-            <div class="contact-item">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="M22 6L12 13L2 6"/>
-              </svg>
-              <span>商务合作请联系：business@infra.com</span>
-            </div>
-            <div class="contact-item">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="M22 6L12 13L2 6"/>
-              </svg>
-              <span>招聘咨询请联系：hr@infra.com</span>
-            </div>
-          </div>
-          <div class="qr-code"></div>
-        </div>
-        <div class="footer-right">
-          <div class="footer-column">
-            <h4 class="column-title">产品</h4>
-            <a href="/products/opticsgpt" class="column-link">OpticsGPT</a>
-            <a href="/products/ifts" class="column-link">智能仿真工具</a>
-            <a href="/products/instruments" class="column-link">智能仪器仪表</a>
-          </div>
-          <div class="footer-column">
-            <h4 class="column-title">新闻中心</h4>
-            <a href="/news" class="column-link">新闻动态</a>
-            <a href="/research" class="column-link">前沿研究</a>
-          </div>
-          <div class="footer-column">
-            <h4 class="column-title">关于LightInfra</h4>
-          </div>
-          <div class="footer-column">
-            <h4 class="column-title">联系我们</h4>
-            <a href="/contact" class="column-link">联系方式</a>
-            <a href="/join" class="column-link">加入我们</a>
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
   pageData: {
     type: Object,
@@ -228,17 +141,6 @@ defineProps({
 
 const emit = defineEmits(['navigate', 'start', 'tabChange'])
 
-const navLinks = [
-  { name: '产品', path: '/products', active: true },
-  { name: '新闻中心', path: '/news', active: false },
-  { name: '关于 LightInfra', path: '/about', active: false },
-  { name: '联系我们', path: '/contact', active: false }
-]
-
-const handleNavClick = (path) => {
-  emit('navigate', path)
-}
-
 const handleStart = () => {
   emit('start', 'instrument')
 }
@@ -252,105 +154,7 @@ const handleStart = () => {
   font-family: 'OPPO Sans 4.0', system-ui, -apple-system, sans-serif;
 }
 
-/* ========== 1. 顶部导航栏 ========== */
-.page-header {
-  width: 100%;
-  height: 80px;
-  background: transparent;
-  display: flex;
-  justify-content: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.header-container {
-  width: 1200px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 77px;
-}
-
-.header-logo {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-.nav-link {
-  font-size: 14px;
-  font-weight: 500;
-  color: #BBBBBB;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.nav-link:hover {
-  color: #FFFFFF;
-}
-
-.nav-link-active {
-  color: #FFFFFF;
-  font-weight: 600;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  border-radius: 30px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.btn-outline {
-  background: transparent;
-  color: #FFFFFF;
-  border: 1px solid #FFFFFF;
-}
-
-.btn-outline:hover {
-  border-color: #0073FF;
-  color: #0073FF;
-}
-
-.btn-filled {
-  background: #FFFFFF;
-  color: #121212;
-  border: 1px solid #FFFFFF;
-}
-
-.btn-filled:hover {
-  background: #0073FF;
-  border-color: #0073FF;
-  color: #FFFFFF;
-}
-
-/* ========== 2. Hero 区 ========== */
+/* ========== 1. Hero 区 ========== */
 .hero-section {
   position: relative;
   width: 100%;
@@ -805,81 +609,5 @@ const handleStart = () => {
   color: #0073FF;
 }
 
-/* ========== 7. 页脚 ========== */
-.page-footer {
-  width: 100%;
-  background: #121212;
-  border-top: 1px solid #323232;
-}
 
-.footer-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 80px 20px;
-  display: flex;
-  gap: 77px;
-}
-
-.footer-left {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.footer-logo {
-  display: block;
-}
-
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #FFFFFF;
-}
-
-.qr-code {
-  width: 128px;
-  height: 128px;
-  background: #D9D9D9;
-  border-radius: 20px;
-}
-
-.footer-right {
-  flex: 1;
-  display: flex;
-  gap: 77px;
-}
-
-.footer-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.column-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin: 0;
-}
-
-.column-link {
-  font-size: 14px;
-  font-weight: 400;
-  color: #FFFFFF;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.column-link:hover {
-  color: #0073FF;
-}
 </style>

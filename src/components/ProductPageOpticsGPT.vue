@@ -8,9 +8,9 @@
       </div>
       <div class="hero-content">
         <div class="hero-left">
-          <h1 class="hero-title">{{ pageData.heroTitle }}</h1>
-          <p class="hero-desc">{{ pageData.heroDesc }}</p>
-          <button class="hero-btn" @click="handleStart">开始使用</button>
+          <h1 class="hero-title">{{ t('product.opticsgpt.heroTitle') }}</h1>
+          <p class="hero-desc">{{ t('product.opticsgpt.heroDesc') }}</p>
+          <button class="hero-btn" @click="handleStart">{{ t('common.startUsing') }}</button>
         </div>
         <div class="hero-right">
           <div class="hero-image-placeholder">
@@ -22,7 +22,7 @@
 
     <!-- 3. 为什么选择 OpticsGPT -->
     <section class="features-section">
-      <h2 class="section-title">{{ pageData.featuresTitle }}</h2>
+      <h2 class="section-title">{{ t('product.opticsgpt.featuresTitle') }}</h2>
       <div class="features-grid">
         <div
           v-for="(feature, index) in pageData.features"
@@ -44,16 +44,16 @@
 
     <!-- 4. 评测对比表格 -->
     <section class="benchmark-section">
-      <h2 class="section-title">{{ pageData.benchmarkTitle }}</h2>
+      <h2 class="section-title">{{ t('product.opticsgpt.benchmarkTitle') }}</h2>
       <div class="benchmark-table">
         <div class="table-header">
           <div class="table-cell cell-model">Model</div>
-          <div class="table-cell">光物理</div>
-          <div class="table-cell">光量子</div>
-          <div class="table-cell">光学设计</div>
-          <div class="table-cell">非线性光学</div>
-          <div class="table-cell">光计算</div>
-          <div class="table-cell">光通信</div>
+          <div class="table-cell">{{ t('product.opticsgpt.benchmark.opticalPhysics') }}</div>
+          <div class="table-cell">{{ t('product.opticsgpt.benchmark.quantumOptics') }}</div>
+          <div class="table-cell">{{ t('product.opticsgpt.benchmark.opticalDesign') }}</div>
+          <div class="table-cell">{{ t('product.opticsgpt.benchmark.nonlinearOptics') }}</div>
+          <div class="table-cell">{{ t('product.opticsgpt.benchmark.opticalComputing') }}</div>
+          <div class="table-cell">{{ t('product.opticsgpt.benchmark.opticalComm') }}</div>
         </div>
         <div
           v-for="(row, rowIndex) in pageData.benchmarkData"
@@ -74,7 +74,7 @@
 
     <!-- 5. 核心功能 -->
     <section class="core-functions-section">
-      <h2 class="section-title section-title-left">{{ pageData.coreFunctionsTitle }}</h2>
+      <h2 class="section-title section-title-left">{{ t('product.opticsgpt.coreFunctionsTitle') }}</h2>
       <div class="functions-grid">
         <div
           v-for="(func, index) in pageData.coreFunctions"
@@ -90,75 +90,24 @@
     <!-- 6. 提示条 -->
     <section class="notice-section">
       <div class="notice-bar">
-        <span class="notice-text">{{ pageData.noticeText }}</span>
+        <span class="notice-text">{{ t('product.opticsgpt.noticeText') }}</span>
       </div>
     </section>
 
     <!-- 7. CTA 区 -->
     <section class="cta-section">
-      <h2 class="cta-title">{{ pageData.ctaTitle }}</h2>
-      <button class="cta-btn" @click="handleStart">开始使用</button>
+      <h2 class="cta-title">{{ t('product.opticsgpt.ctaTitle') }}</h2>
+      <button class="cta-btn" @click="handleStart">{{ t('common.startUsing') }}</button>
     </section>
 
-    <!-- 8. 页脚 -->
-    <footer class="page-footer">
-      <div class="footer-container">
-        <div class="footer-left">
-          <svg class="footer-logo" width="205" height="68" viewBox="0 0 112 37" fill="none">
-            <polygon points="6,0 28,0 28,26" fill="#FFFFFF" />
-            <polygon points="0,17 22,17 22,37" fill="#FFFFFF" />
-            <rect x="42" y="4" width="4" height="30" fill="#FFFFFF"/>
-            <rect x="52" y="12" width="4" height="22" fill="#FFFFFF"/>
-            <rect x="62" y="8" width="4" height="26" fill="#FFFFFF"/>
-            <rect x="72" y="15" width="4" height="18" fill="#FFFFFF"/>
-            <rect x="82" y="6" width="4" height="28" fill="#FFFFFF"/>
-            <rect x="92" y="11" width="4" height="23" fill="#FFFFFF"/>
-          </svg>
-          <div class="contact-info">
-            <div class="contact-item">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="M22 6L12 13L2 6"/>
-              </svg>
-              <span>商务合作请联系：business@infra.com</span>
-            </div>
-            <div class="contact-item">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="M22 6L12 13L2 6"/>
-              </svg>
-              <span>招聘咨询请联系：hr@infra.com</span>
-            </div>
-          </div>
-          <div class="qr-code"></div>
-        </div>
-        <div class="footer-right">
-          <div class="footer-column">
-            <h4 class="column-title">产品</h4>
-            <a href="/products/opticsgpt" class="column-link">OpticsGPT</a>
-            <a href="/products/ifts" class="column-link">智能仿真工具</a>
-            <a href="/products/instruments" class="column-link">智能仪器仪表</a>
-          </div>
-          <div class="footer-column">
-            <h4 class="column-title">新闻中心</h4>
-            <a href="/news" class="column-link">新闻动态</a>
-            <a href="/research" class="column-link">前沿研究</a>
-          </div>
-          <div class="footer-column">
-            <h4 class="column-title">关于LightInfra</h4>
-          </div>
-          <div class="footer-column">
-            <h4 class="column-title">联系我们</h4>
-            <a href="/contact" class="column-link">联系方式</a>
-            <a href="/join" class="column-link">加入我们</a>
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
   pageData: {
     type: Object,
@@ -574,80 +523,5 @@ const handleStart = () => {
   color: #0073FF;
 }
 
-/* ========== 8. 页脚 ========== */
-.page-footer {
-  width: 100%;
-  background: #121212;
-  border-top: 1px solid #323232;
-}
 
-.footer-container {
-  width: 1200px;
-  margin: 0 auto;
-  padding: 80px 0;
-  display: flex;
-  gap: 77px;
-}
-
-.footer-left {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.footer-logo {
-  display: block;
-}
-
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #FFFFFF;
-}
-
-.qr-code {
-  width: 128px;
-  height: 128px;
-  background: #D9D9D9;
-  border-radius: 20px;
-}
-
-.footer-right {
-  flex: 1;
-  display: flex;
-  gap: 77px;
-}
-
-.footer-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.column-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin: 0;
-}
-
-.column-link {
-  font-size: 14px;
-  font-weight: 400;
-  color: #FFFFFF;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.column-link:hover {
-  color: #0073FF;
-}
 </style>

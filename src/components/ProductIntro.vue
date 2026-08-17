@@ -23,14 +23,14 @@
           <!-- 文字内容 -->
           <div class="block-content">
             <div class="content-text">
-              <h2 class="product-title">{{ product.title }}</h2>
-              <p class="product-desc">{{ product.description }}</p>
+              <h2 class="product-title">{{ t(product.titleKey) }}</h2>
+              <p class="product-desc">{{ t(product.descKey) }}</p>
             </div>
             <button
               class="start-btn"
               @click="handleStart(index)"
             >
-              开始使用
+              {{ t('common.startUsing') }}
             </button>
           </div>
         </div>
@@ -55,26 +55,29 @@ const productImages = {
   instruments: '/media/ProductPage-智能仪器仪表-hero.png'
 }
 
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 const props = defineProps({
   products: {
     type: Array,
     default: () => [
       {
         id: 'opticsgpt',
-        title: 'OpticsGPT',
-        description: '面向光学产业的垂域大模型，为科研、研发与工程应用提供专业智能能力',
+        titleKey: 'productIntro.opticsgptTitle',
+        descKey: 'productIntro.opticsgptDesc',
         activeIndex: 0
       },
       {
         id: 'ifts',
-        title: '智能仿真工具 IFTS',
-        description: '致力于降低光学专业门槛 打通领域知识与工程应用壁垒',
+        titleKey: 'productIntro.iftsTitle',
+        descKey: 'productIntro.iftsDesc',
         activeIndex: 1
       },
       {
         id: 'instruments',
-        title: '智能仪器仪表',
-        description: '让仪器统一接入，让测试智能执行',
+        titleKey: 'productIntro.instrumentsTitle',
+        descKey: 'productIntro.instrumentsDesc',
         activeIndex: 2
       }
     ]
@@ -96,6 +99,7 @@ const getProductImage = (productId) => {
 .product-intro-page {
   width: 1485px;
   min-height: 2068px;
+  margin: 0 auto;
   background: #121212;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
