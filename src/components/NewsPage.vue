@@ -66,7 +66,7 @@
         </div>
         <div class="news-grid">
           <div
-            v-for="news in newsData.newsList"
+            v-for="news in newsList"
             :key="news.id"
             class="news-card"
           >
@@ -101,7 +101,7 @@
         </div>
         <div class="news-grid">
           <div
-            v-for="paper in researchData.researchList"
+            v-for="paper in researchList"
             :key="paper.id"
             class="news-card"
             @click="handleReadMore(paper.id)"
@@ -187,7 +187,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -280,6 +280,47 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['search', 'readMore', 'loadMore', 'start'])
+
+// ===== 数据源：优先从 Strapi 后端拉取，失败时为保底用硬编码默认值 =====
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:1337'
+
+// 文章列表（news / research）：初始用硬编码默认值（props 默认 / 下方 researchData），
+// onMounted 拉取成功后用后端数据覆盖
+const newsList = ref(props.newsData?.newsList || [])
+const researchList = ref([])
+
+// 把一条 Strapi article {id, attributes} 映射成前端展示字段
+function mapArticle(item) {
+  const attrs = item?.attributes || {}
+  return {
+    id: String(item?.id ?? Math.random()),
+    tag: attrs.category === 'research' ? '论文' : '文章',
+    date: (attrs.publishedAt || attrs.createdAt || '').slice(0, 10),
+    title: attrs.title || '未命名文章',
+    excerpt: attrs.excerpt || (attrs.subtitle ? attrs.subtitle.slice(0, 80) : ''),
+  }
+}
+
+async function fetchArticles() {
+  try {
+    const res = await fetch(`${API_BASE}/api/articles?populate=cover`, {
+      headers: { Accept: 'application/json' },
+    })
+    if (!res.ok) return
+    const json = await res.json()
+    const all = (json.data || []).map(mapArticle)
+    newsList.value = all.filter((it) => it.tag === '文章')
+    researchList.value = all.filter((it) => it.tag === '论文')
+  } catch (e) {
+    // 后端不可用时保持硬编码默认值
+  }
+}
+
+onMounted(() => {
+  // 把 researchList 初值设为硬编码 research 数据，保证后端不可用时也有内容
+  researchList.value = researchData.researchList || []
+  fetchArticles()
+})
 
 const activeTab = ref(props.initialTab)
 const searchKeyword = ref('')
