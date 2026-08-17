@@ -1,12 +1,8 @@
 <template>
-  <div class="app">
-    <AppNavbar />
-    <router-view />
-  </div>
+  <router-view />
 </template>
 
 <script setup>
-import AppNavbar from './components/AppNavbar.vue'
 </script>
 
 <style>
@@ -24,14 +20,6 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
   background: #121212;
   min-width: 320px;
-}
-
-.app {
-  min-height: 100vh;
-  background: #121212;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 /* 页面容器，最大宽度1600px，居中显示 */

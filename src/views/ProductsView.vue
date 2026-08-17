@@ -1,12 +1,10 @@
 <template>
   <div class="products-page">
-    <AppNavbar currentRoute="/products" />
     <ProductIntro @start="handleStart" />
   </div>
 </template>
 
 <script setup>
-import AppNavbar from '../components/AppNavbar.vue'
 import ProductIntro from '../components/ProductIntro.vue'
 
 const handleStart = (index) => {
