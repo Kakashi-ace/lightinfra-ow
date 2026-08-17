@@ -6,8 +6,7 @@ export default {
     about: 'About LightInfra',
     contact: 'Contact',
     applyDemo: 'Apply Demo',
-    startUsing: 'Get Started',
-    login: 'Login / Register'
+    startUsing: 'Get Started'
   },
   hero: {
     title: 'Intelligence Optical, Create Future',

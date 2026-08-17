@@ -6,8 +6,7 @@ export default {
     about: '关于 LightInfra',
     contact: '联系我们',
     applyDemo: '申请演示',
-    startUsing: '开始使用',
-    login: '登录/注册'
+    startUsing: '开始使用'
   },
   hero: {
     title: '智起光学 创见未来',

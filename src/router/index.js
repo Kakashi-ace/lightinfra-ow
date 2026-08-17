@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import RegisterView from '../views/RegisterView.vue'
 import ProductsView from '../views/ProductsView.vue'
 import OpticsGPTProductView from '../views/OpticsGPTProductView.vue'
 import IFTSProductView from '../views/IFTSProductView.vue'
@@ -48,18 +46,6 @@ const router = createRouter({
       name: 'instrument-product',
       component: InstrumentProductView,
       meta: { title: '智能仪器仪表 - 产品中心 - LightInfra' }
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView,
-      meta: { title: '登录 - LightInfra' }
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: RegisterView,
-      meta: { title: '注册 - LightInfra' }
     },
     {
       path: '/about',

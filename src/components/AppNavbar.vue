@@ -62,7 +62,6 @@
             </button>
           </div>
         </div>
-        <a href="/login" class="btn btn-filled">登录/注册</a>
       </div>
     </div>
   </header>
