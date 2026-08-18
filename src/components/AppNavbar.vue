@@ -3,9 +3,9 @@
     <div class="navbar-container">
       <!-- 左侧 Logo + 导航链接 -->
       <div class="navbar-left">
-        <a href="/" class="navbar-logo" aria-label="LightInfra 首页">
+        <router-link to="/" class="navbar-logo" aria-label="LightInfra 首页">
           <img src="/media/logo-section.png" alt="LightInfra" />
-        </a>
+        </router-link>
 
         <nav class="navbar-nav" role="navigation" aria-label="主导航">
           <!-- 产品下拉菜单（antd, hover 弹出） -->
@@ -15,7 +15,7 @@
               class="nav-link nav-dropdown-toggle"
               :class="{ 'nav-link-active': isProductsRoute }"
             >
-              <span>{{ t('nav.products') }}</span>
+              <span>{{ currentProductName }}</span>
               <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
@@ -23,24 +23,24 @@
             <template #overlay>
               <a-menu :selected-keys="[currentRoute]">
                 <a-menu-item key="/products">
-                  <a :href="'/products'">{{ t('nav.productCenter') }}</a>
+                  <router-link to="/products">{{ t('nav.productCenter') }}</router-link>
                 </a-menu-item>
                 <a-menu-item v-for="product in productLinks" :key="product.path">
-                  <a :href="product.path">{{ t(product.i18nKey) }}</a>
+                  <router-link :to="product.path">{{ t(product.i18nKey) }}</router-link>
                 </a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
 
-          <a
+          <router-link
             v-for="link in otherLinks"
             :key="link.path"
-            :href="link.path"
+            :to="link.path"
             class="nav-link"
             :class="{ 'nav-link-active': currentRoute === link.path }"
           >
             {{ t(link.i18nKey) }}
-          </a>
+          </router-link>
         </nav>
       </div>
 
@@ -79,6 +79,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { LOCALE_KEY } from '../i18n'
 
 const { t, locale } = useI18n()
 
@@ -108,6 +109,15 @@ const isProductsRoute = computed(() =>
   props.currentRoute.startsWith('/products')
 )
 
+// 产品下拉按钮：在具体产品页时显示该产品名，否则显示「产品」
+const currentProductName = computed(() => {
+  const route = props.currentRoute
+  if (route === '/products/opticsgpt') return t('footer.opticsgpt')
+  if (route === '/products/ifts') return t('footer.ifts')
+  if (route === '/products/instruments') return t('footer.instruments')
+  return t('nav.products')
+})
+
 // 当前语言对应的名称：语言切换按钮 / 语言下拉菜单展示具体语言名
 const currentLanguageName = computed(() =>
   locale.value === 'en' ? 'English' : '简体中文'
@@ -123,6 +133,11 @@ const toggleDropdown = () => {
 
 const switchLanguage = (lang) => {
   locale.value = lang
+  try {
+    localStorage.setItem(LOCALE_KEY, lang)
+  } catch (e) {
+    /* ignore */
+  }
   isOpen.value = false
 }
 

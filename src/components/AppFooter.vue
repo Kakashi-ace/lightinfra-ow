@@ -33,22 +33,22 @@
       <div class="footer-right">
         <div class="footer-column">
           <h4 class="column-title">{{ t('footer.products') }}</h4>
-          <a href="/products/opticsgpt" class="column-link">{{ t('footer.opticsgpt') }}</a>
-          <a href="/products/ifts" class="column-link">{{ t('footer.ifts') }}</a>
-          <a href="/products/instruments" class="column-link">{{ t('footer.instruments') }}</a>
+          <router-link to="/products/opticsgpt" class="column-link">{{ t('footer.opticsgpt') }}</router-link>
+          <router-link to="/products/ifts" class="column-link">{{ t('footer.ifts') }}</router-link>
+          <router-link to="/products/instruments" class="column-link">{{ t('footer.instruments') }}</router-link>
         </div>
         <div class="footer-column">
           <h4 class="column-title">{{ t('footer.newsCenter') }}</h4>
-          <a href="/news" class="column-link">{{ t('footer.news') }}</a>
-          <a href="/research" class="column-link">{{ t('footer.research') }}</a>
+          <router-link to="/news" class="column-link">{{ t('footer.news') }}</router-link>
+          <router-link to="/research" class="column-link">{{ t('footer.research') }}</router-link>
         </div>
         <div class="footer-column">
           <h4 class="column-title">{{ t('footer.aboutLightInfra') }}</h4>
+          <router-link to="/about" class="column-link">{{ t('footer.aboutLightInfra') }}</router-link>
         </div>
         <div class="footer-column">
           <h4 class="column-title">{{ t('footer.contact') }}</h4>
-          <a href="/contact" class="column-link">{{ t('footer.contactUs') }}</a>
-          <a href="/join" class="column-link">{{ t('footer.joinUs') }}</a>
+          <router-link to="/contact" class="column-link">{{ t('footer.contactUs') }}</router-link>
         </div>
       </div>
     </div>
