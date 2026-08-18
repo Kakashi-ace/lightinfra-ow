@@ -99,7 +99,7 @@ const productLinks = ref([
 ])
 
 const otherLinks = ref([
-  { i18nKey: 'footer.newsCenter', path: '/news' },
+  { i18nKey: 'footer.newsCenter', path: '/news-research' },
   { i18nKey: 'footer.aboutLightInfra', path: '/about' },
   { i18nKey: 'nav.contact', path: '/contact' }
 ])
@@ -109,9 +109,9 @@ const isProductsRoute = computed(() =>
   props.currentRoute.startsWith('/products')
 )
 
-// 导航项高亮：/news 及其子页（前沿研究 / 研究详情）都算「新闻中心」命中，其余按精确匹配
+// 导航项高亮：/news-research 及其子页（前沿研究 / 研究详情）都算「新闻中心」命中，其余按精确匹配
 const isLinkActive = (path) => {
-  if (path === '/news') return props.currentRoute.startsWith('/news')
+  if (path === '/news-research') return props.currentRoute.startsWith('/news-research')
   return props.currentRoute === path
 }
 

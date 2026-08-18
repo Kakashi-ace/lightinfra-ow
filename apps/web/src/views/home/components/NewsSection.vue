@@ -5,7 +5,7 @@
         <h2>{{ t('home.newsTitle') }}</h2>
         <p>{{ t('home.newsDesc') }}</p>
       </div>
-      <router-link to="/news" class="btn-medium">{{ t('common.startUsing') }}</router-link>
+      <router-link to="/news-research" class="btn-medium">{{ t('common.startUsing') }}</router-link>
     </div>
     <div class="news-layout">
       <div class="news-featured">

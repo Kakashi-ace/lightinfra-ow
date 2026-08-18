@@ -47,6 +47,10 @@ const router = createRouter({
           children: [
             {
               path: '',
+              redirect: { name: 'products-list' }
+            },
+            {
+              path: 'list',
               name: 'products-list',
               component: ProductsListView,
               meta: { title: '产品 - LightInfra' }
@@ -84,17 +88,21 @@ const router = createRouter({
           meta: { title: '联系我们 - LightInfra' }
         },
         {
-          path: 'news',
+          path: 'news-research',
           component: NewsView,
           children: [
             {
               path: '',
+              redirect: { name: 'news-list' }
+            },
+            {
+              path: 'news-list',
               name: 'news-list',
               component: NewsListView,
               meta: { title: '新闻动态 - LightInfra' }
             },
             {
-              path: 'research',
+              path: 'research-list',
               name: 'research-list',
               component: ResearchListView,
               meta: { title: '前沿研究 - LightInfra' }
