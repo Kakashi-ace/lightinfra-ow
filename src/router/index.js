@@ -1,41 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '../layouts/AppLayout.vue'
-import HomeView from '../views/HomeView.vue'
-import ProductsView from '../views/ProductsView.vue'
-import OpticsGPTProductView from '../views/OpticsGPTProductView.vue'
-import IFTSProductView from '../views/IFTSProductView.vue'
-import InstrumentProductView from '../views/InstrumentProductView.vue'
-import AboutView from '../views/AboutView.vue'
-import RecruitView from '../views/RecruitView.vue'
-import ContactView from '../views/ContactView.vue'
-import NewsView from '../views/NewsView.vue'
-import ResearchView from '../views/ResearchView.vue'
-import NewsDetailResearchView from '../views/NewsDetailResearchView.vue'
+import HomeView from '../views/home/HomeView.vue'
+import ProductsView from '../views/products/ProductsView.vue'
+import ProductsListView from '../views/products/list/ProductsListView.vue'
+import OpticsGPTProductView from '../views/products/opticgpt/OpticsGPTProductView.vue'
+import IFTSProductView from '../views/products/ifts/IftsProductView.vue'
+import InstrumentProductView from '../views/products/instrument/InstrumentProductView.vue'
+import AboutView from '../views/about/AboutView.vue'
+import ContactView from '../views/contact/ContactView.vue'
+import NewsView from '../views/news/NewsView.vue'
+import ResearchView from '../views/news/ResearchView.vue'
+import NewsDetailResearchView from '../views/research-detail/NewsDetailResearchView.vue'
 
 const DEFAULT_TITLE = 'LightInfra'
-
-// 产品子落地页：完整整页（自带 hero + footer），URL 嵌套在 /products 下，
-// 但渲染为独立整页，而非叠加在「产品中心」页内
-const productDetailRoutes = [
-  {
-    path: 'products/opticsgpt',
-    name: 'opticsgpt-product',
-    component: OpticsGPTProductView,
-    meta: { title: 'OpticsGPT - 产品中心 - LightInfra' }
-  },
-  {
-    path: 'products/ifts',
-    name: 'ifts-product',
-    component: IFTSProductView,
-    meta: { title: 'IFTS - 产品中心 - LightInfra' }
-  },
-  {
-    path: 'products/instruments',
-    name: 'instrument-product',
-    component: InstrumentProductView,
-    meta: { title: '智能仪器仪表 - 产品中心 - LightInfra' }
-  }
-]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,23 +29,39 @@ const router = createRouter({
         },
         {
           path: 'products',
-          name: 'products',
           component: ProductsView,
-          meta: { title: '产品中心 - LightInfra' }
+          children: [
+            {
+              path: '',
+              name: 'products-list',
+              component: ProductsListView,
+              meta: { title: '产品 - LightInfra' }
+            },
+            {
+              path: 'opticsgpt',
+              name: 'opticsgpt-product',
+              component: OpticsGPTProductView,
+              meta: { title: 'OpticsGPT - 产品 - LightInfra' }
+            },
+            {
+              path: 'ifts',
+              name: 'ifts-product',
+              component: IFTSProductView,
+              meta: { title: 'IFTS - 产品 - LightInfra' }
+            },
+            {
+              path: 'instruments',
+              name: 'instrument-product',
+              component: InstrumentProductView,
+              meta: { title: '智能仪器仪表 - 产品 - LightInfra' }
+            }
+          ]
         },
-        // 产品子落地页作为父布局的孩子，独立整页渲染
-        ...productDetailRoutes,
         {
           path: 'about',
           name: 'about',
           component: AboutView,
           meta: { title: '关于我们 - LightInfra' }
-        },
-        {
-          path: 'join',
-          name: 'recruit',
-          component: RecruitView,
-          meta: { title: '加入我们 - LightInfra' }
         },
         {
           path: 'contact',
