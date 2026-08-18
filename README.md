@@ -1,4 +1,4 @@
-# Lightinfra Web
+# lightinfra-ow
 
 公司官网前端与内容管理后端的单一仓库（monorepo）。两个应用各自独立依赖，**不使用 npm workspaces**。
 
@@ -14,15 +14,23 @@ docs/         部署与运维文档
 
 Strapi 官方不支持 workspaces（[strapi#9079](https://github.com/strapi/strapi/issues/9079)），且依赖提升会破坏原生模块 —— 本项目的 `better-sqlite3` 正是原生模块。两个应用之间没有共享运行时依赖（仅 `typescript` 与 `@types/node` 重叠，且版本不同），提升带不来收益。
 
-因此：**每个应用目录内单独 `npm install`，各自有 `node_modules` 和 lockfile。仓库根没有 `package.json`，不要在根目录执行 `npm install`。**
+因此：**每个应用目录内单独 `npm install`，各自有 `node_modules` 和 lockfile，不提升依赖。** 仓库根的 `package.json` 只是启动便利脚本（`concurrently` 转发），不是 workspaces 根。
 
 ## 本地开发
 
 ```bash
-# 前端（默认 5173 端口）
+# 根目录只需装一次 concurrently
+npm install
+
+# 一条命令同时启动前端（5173）+ 后端（1337）
+npm run dev
+```
+
+也可以分别启动：
+
+```bash
 cd apps/web && npm install && npm run dev
 
-# 后端（默认 1337 端口）
 cd apps/cms && npm install && npm run develop
 ```
 

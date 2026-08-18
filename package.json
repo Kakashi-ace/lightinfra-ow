@@ -1,0 +1,14 @@
+{
+  "name": "lightinfra-ow",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n web,cms -c blue,green \"npm run dev --prefix apps/web\" \"npm run develop --prefix apps/cms\"",
+    "dev:web": "npm run dev --prefix apps/web",
+    "dev:cms": "npm run develop --prefix apps/cms",
+    "build": "npm run build --prefix apps/web",
+    "build:cms": "npm run build --prefix apps/cms"
+  },
+  "devDependencies": {
+    "concurrently": "9.1.2"
+  }
+}
