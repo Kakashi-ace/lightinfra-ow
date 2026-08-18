@@ -14,8 +14,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import AppNavbar from '../components/AppNavbar.vue'
-import AppFooter from '../components/AppFooter.vue'
+import AppNavbar from '@/components/AppNavbar.vue'
+import AppFooter from '@/components/AppFooter.vue'
 
 const route = useRoute()
 

@@ -15,7 +15,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import NewsPageHeader from '../components/NewsPageHeader.vue'
 import ArticleListSection from '../components/ArticleListSection.vue'
-import { useArticleList } from '../composables/useArticleList'
+import { useArticleList } from '@/composables/useArticleList'
 
 const router = useRouter()
 const { t } = useI18n()

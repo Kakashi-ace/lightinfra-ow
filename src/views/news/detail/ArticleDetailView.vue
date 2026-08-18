@@ -6,15 +6,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import DetailHeroSection from './components/DetailHeroSection.vue'
 import DetailBodySection from './components/DetailBodySection.vue'
-import { fetchArticle } from '../../../api/articles'
+import { fetchArticle } from '@/api/articles'
 
 const route = useRoute()
 
-// 渲染数据：默认展示占位，onMounted 从 Strapi 拉取后覆盖
+// 渲染数据：默认占位，拉取成功后覆盖
 const articleData = ref({
   tag: '论文',
   title: '文章加载中…',
@@ -22,11 +22,21 @@ const articleData = ref({
   paragraphs: [],
 })
 
+// 路由切走时中断在途请求
+const controller = new AbortController()
+
 onMounted(async () => {
-  const detail = await fetchArticle(route.params.id)
-  // 后端不可用时保持占位默认值
-  if (detail) articleData.value = detail
+  try {
+    const detail = await fetchArticle(route.params.id, { signal: controller.signal })
+    if (detail) articleData.value = detail
+  } catch (e) {
+    if (!e?.isCanceled) {
+      console.warn(`[articles] 详情拉取失败：${e?.message}`)
+    }
+  }
 })
+
+onUnmounted(() => controller.abort())
 </script>
 
 <style scoped>
