@@ -1,4 +1,6 @@
-﻿export default {
+﻿// 简体中文为文案基准：MessageSchema 由此推导，其他语言需满足同一形状，
+// 因此漏翻某个键会直接变成类型错误。
+const messages = {
   nav: {
     language: '语言',
     products: '产品',
@@ -142,3 +144,8 @@
     searchPlaceholder: '想要查找什么？'
   }
 }
+
+/** 文案字典的形状，以简体中文为基准 */
+export type MessageSchema = typeof messages
+
+export default messages

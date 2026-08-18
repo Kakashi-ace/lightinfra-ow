@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteLocationNormalized } from 'vue-router'
 import AppLayout from '@/layouts/AppLayout.vue'
 import HomeView from '@/views/home/HomeView.vue'
 import ProductsView from '@/views/products/ProductsView.vue'
@@ -13,12 +14,20 @@ import NewsListView from '@/views/news/list/NewsListView.vue'
 import ResearchListView from '@/views/news/research/ResearchListView.vue'
 import ArticleDetailView from '@/views/news/detail/ArticleDetailView.vue'
 
+// 让 to.meta.title 有类型，而不是 any
+declare module 'vue-router' {
+  interface RouteMeta {
+    /** 浏览器标签页标题。嵌套路由下取最深一层定义了此项的 meta */
+    title?: string
+  }
+}
+
 const DEFAULT_TITLE = 'LightInfra'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   // 切换路由时回到页面顶部；浏览器前进/后退保留原滚动位置
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(_to, _from, savedPosition) {
     return savedPosition || { top: 0 }
   },
   routes: [
@@ -104,9 +113,10 @@ const router = createRouter({
 })
 
 // 从匹配到的路由记录中，取最深一层定义了 title 的 meta，支持嵌套路由标题继承
-function resolvePageTitle(to) {
+function resolvePageTitle(to: RouteLocationNormalized): string {
   for (let i = to.matched.length - 1; i >= 0; i--) {
-    if (to.matched[i].meta?.title) return to.matched[i].meta.title
+    const title = to.matched[i]?.meta?.title
+    if (title) return title
   }
   return DEFAULT_TITLE
 }

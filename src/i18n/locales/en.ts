@@ -1,4 +1,7 @@
-﻿export default {
+﻿import type { MessageSchema } from './zh-CN'
+
+// 显式标注为 MessageSchema：漏翻或键名写错会在此处报类型错误
+const messages: MessageSchema = {
   nav: {
     language: 'Language',
     products: 'Products',
@@ -142,3 +145,5 @@
     searchPlaceholder: 'What are you looking for?'
   }
 }
+
+export default messages
