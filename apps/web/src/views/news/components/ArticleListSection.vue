@@ -12,7 +12,15 @@
           class="news-card"
         >
           <div class="news-card-image">
-            <svg width="100%" height="100%" viewBox="0 0 384 216" fill="none">
+            <!-- CMS 配了封面就用，否则回退到灰底占位 -->
+            <img
+              v-if="item.cover"
+              class="news-card-cover"
+              :src="item.cover"
+              :alt="item.coverAlt || item.title"
+              loading="lazy"
+            />
+            <svg v-else width="100%" height="100%" viewBox="0 0 384 216" fill="none">
               <rect width="384" height="216" fill="#D9D9D9" />
             </svg>
           </div>
@@ -112,6 +120,15 @@ const emit = defineEmits(['readMore', 'loadMore'])
   width: 100%;
   height: 216px;
   flex-shrink: 0;
+  background: #D9D9D9;
+}
+
+/* 封面比例不定，统一裁切填满，避免卡片高度被撑变 */
+.news-card-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .news-card-body {

@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "articles",
+  "info": {
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "Article",
+    "description": "新闻与研究文章"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "subtitle": {
+      "type": "text",
+      "required": false
+    },
+    "excerpt": {
+      "type": "text",
+      "required": false
+    },
+    "body": {
+      "type": "richtext",
+      "required": false
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": ["news", "research"],
+      "default": "news",
+      "required": true
+    },
+    "tags": {
+      "type": "json"
+    },
+    "publishedAt": {
+      "type": "datetime",
+      "required": false
+    }
+  }
+}

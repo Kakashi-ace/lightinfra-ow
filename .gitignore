@@ -1,28 +1,15 @@
-# ===== 依赖 =====
-node_modules/
+# 仓库根 .gitignore：只管跨应用的通用规则。
+# 各应用自己的规则写在 apps/web/.gitignore 和 apps/cms/.gitignore，
+# 那样路径相对各自目录，不必在这里维护 apps/ 前缀。
 
-# ===== 构建产物 =====
-dist/
-.vite/
-
-# ===== TypeScript 增量编译缓存 =====
-*.tsbuildinfo
-
-# ===== 媒体素材：全部不纳入版本控制 =====
-public/media/
-
-# ===== 本地环境变量：.env / .env.development / .env.production 纳入版本控制，
-#       个人覆盖写在 .env.local（已被下方 *.local 覆盖，此处显式列出以示意图） =====
-.env.local
-.env.*.local
-
-# ===== 系统/编辑器等杂项 =====
+# ===== 系统/编辑器杂项 =====
 .DS_Store
+Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
-*.local
 *.log
 
-# ===== 工具会话/临时状态 =====
+# ===== 工具会话/本地状态 =====
 .reasonix/
+.claude/settings.local.json

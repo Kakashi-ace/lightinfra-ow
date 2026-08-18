@@ -16,7 +16,9 @@ export default defineConfig({
     // 前端始终同源请求，由代理转发，免去 Strapi 配置 CORS
     proxy: {
       '/api': { target: STRAPI_ORIGIN, changeOrigin: true },
-      // Strapi 上传的媒体文件返回相对路径，一并代理
+      // 读图用。/uploads 不是上传接口（那个是 POST /api/upload），
+      // 而是 Strapi local provider 的静态媒体目录：文章 cover 返回
+      // /uploads/xxx.jpg 这类站内相对路径，不代理会 404 在前端 origin 上。
       '/uploads': { target: STRAPI_ORIGIN, changeOrigin: true }
     }
   }

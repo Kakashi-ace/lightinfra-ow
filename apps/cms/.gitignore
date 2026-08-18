@@ -1,0 +1,31 @@
+# ===== 依赖 =====
+node_modules/
+
+# ===== 构建产物 =====
+dist/
+build/
+.strapi/
+.cache/
+
+# ===== 本地数据库（SQLite）=====
+# 生产库在服务器 /var/lib/strapi/，本地开发库不进版本控制
+.tmp/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.strapi-updater.json
+
+# ===== 上传的媒体：运行时产生，服务器上放 shared/uploads =====
+public/uploads/*
+!public/uploads/.gitkeep
+
+# ===== 密钥：本文件含 APP_KEYS / JWT_SECRET / ENCRYPTION_KEY 等真实值，
+#       严禁进版本控制。模板见 .env.example =====
+.env
+.env.*
+!.env.example
+
+# ===== 系统/编辑器杂项 =====
+.DS_Store
+*.log

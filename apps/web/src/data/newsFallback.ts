@@ -14,6 +14,8 @@ export const NEWS_FALLBACK: ArticleFallback = {
     date: '2026-01-01',
     title: NEWS_TITLE,
     excerpt: NEWS_EXCERPT,
+    cover: null,
+    coverAlt: '',
   })),
 }
 
@@ -32,6 +34,8 @@ export const RESEARCH_FALLBACK: ArticleFallback = {
       date: '2026-01-01',
       title: '指数剪枝可学习数字反向传播实现低复杂度光纤非线性补偿',
       excerpt: '上海交通大学电子信息与电气工程学院义理林教授课题组提出了一种低复杂度指数剪枝可学习数字反向传播方法...',
+      cover: null,
+      coverAlt: '',
     },
     {
       id: '11',
@@ -40,6 +44,8 @@ export const RESEARCH_FALLBACK: ArticleFallback = {
       date: '2026-01-01',
       title: 'Agent赋能光网络运维智能化',
       excerpt: '光之宇智能科技有限公司长期开展智能光传输及光网络运维管理研究...',
+      cover: null,
+      coverAlt: '',
     },
     ...Array.from({ length: 7 }, (_, i): ArticleSummary => ({
       id: String(i + 12),
@@ -48,6 +54,8 @@ export const RESEARCH_FALLBACK: ArticleFallback = {
       date: '2026-01-01',
       title: NEWS_TITLE,
       excerpt: NEWS_EXCERPT,
+      cover: null,
+      coverAlt: '',
     })),
   ],
 }

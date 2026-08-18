@@ -12,6 +12,10 @@ export interface ArticleSummary {
   date: string
   title: string
   excerpt: string
+  /** 封面图 URL。CMS 未配图时为 null，由组件回退到占位图 */
+  cover: string | null
+  /** 封面图 alt。取 Strapi 的 alternativeText，缺省时为空串 */
+  coverAlt: string
 }
 
 /** 详情页渲染所需的文章字段 */
@@ -53,6 +57,8 @@ export interface StrapiArticle {
   category?: string
   publishedAt?: string
   createdAt?: string
+  /** 需 populate=cover 才会返回；未配图时为 null */
+  cover?: StrapiMedia | null
   [key: string]: unknown
 }
 
@@ -61,6 +67,21 @@ export interface StrapiRichTextBlock {
   type?: string
   children?: Array<{ text?: string }>
 }
+
+/**
+ * Strapi 媒体字段。
+ * local provider 返回站内相对路径（/uploads/xxx.jpg），
+ * 换成 S3/OSS 等 provider 后会变成绝对 URL，两种都要能用。
+ */
+export interface StrapiMedia {
+  url?: string
+  alternativeText?: string | null
+  /** 上传图片时自动生成的尺寸变体，小图不一定齐全 */
+  formats?: Partial<Record<StrapiMediaFormat, { url?: string }>> | null
+}
+
+/** Strapi 默认生成的图片尺寸变体，由小到大 */
+export type StrapiMediaFormat = 'thumbnail' | 'small' | 'medium' | 'large'
 
 /** Strapi v5 的响应包装 */
 export interface StrapiResponse<T> {
