@@ -122,10 +122,7 @@
     searchPlaceholder: 'What are you looking for?',
     sectionTitle: 'News',
     sectionSubtitle: 'Product launches · Company news · Industry collaboration',
-    researchSectionSubtitle: 'Frontier insights · Academic research · Engineering practice',
-    articleTag: 'Article',
-    paperTag: 'Paper',
-    meetingTag: 'Conference'
+    researchSectionSubtitle: 'Frontier insights · Academic research · Engineering practice'
   },
   contact: {
     bizContact: "Business: business{'@'}infra.com",

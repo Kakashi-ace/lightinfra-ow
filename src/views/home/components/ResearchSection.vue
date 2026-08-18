@@ -5,7 +5,7 @@
         <h2>{{ t('home.researchTitle') }}</h2>
         <p>{{ t('home.researchDesc') }}</p>
       </div>
-      <router-link to="/news" class="btn-medium">{{ t('common.startUsing') }}</router-link>
+      <router-link to="/news/research" class="btn-medium">{{ t('common.startUsing') }}</router-link>
     </div>
     <div class="news-cards">
       <div v-for="card in cards" :key="card.image" class="news-card">

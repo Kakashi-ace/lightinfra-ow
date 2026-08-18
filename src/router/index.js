@@ -9,13 +9,18 @@ import InstrumentProductView from '../views/products/instrument/InstrumentProduc
 import AboutView from '../views/about/AboutView.vue'
 import ContactView from '../views/contact/ContactView.vue'
 import NewsView from '../views/news/NewsView.vue'
-import ResearchView from '../views/news/ResearchView.vue'
-import NewsDetailResearchView from '../views/research-detail/NewsDetailResearchView.vue'
+import NewsListView from '../views/news/list/NewsListView.vue'
+import ResearchListView from '../views/news/research/ResearchListView.vue'
+import ArticleDetailView from '../views/news/detail/ArticleDetailView.vue'
 
 const DEFAULT_TITLE = 'LightInfra'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  // 切换路由时回到页面顶部；浏览器前进/后退保留原滚动位置
+  scrollBehavior(to, from, savedPosition) {
+    return savedPosition || { top: 0 }
+  },
   routes: [
     {
       path: '/',
@@ -71,21 +76,27 @@ const router = createRouter({
         },
         {
           path: 'news',
-          name: 'news',
           component: NewsView,
-          meta: { title: '新闻动态 - LightInfra' }
-        },
-        {
-          path: 'research',
-          name: 'research',
-          component: ResearchView,
-          meta: { title: '最新研究 - LightInfra' }
-        },
-        {
-          path: 'research/detail/:id',
-          name: 'research-detail',
-          component: NewsDetailResearchView,
-          meta: { title: '研究详情 - LightInfra' }
+          children: [
+            {
+              path: '',
+              name: 'news-list',
+              component: NewsListView,
+              meta: { title: '新闻动态 - LightInfra' }
+            },
+            {
+              path: 'research',
+              name: 'research-list',
+              component: ResearchListView,
+              meta: { title: '前沿研究 - LightInfra' }
+            },
+            {
+              path: 'detail/:id',
+              name: 'news-detail',
+              component: ArticleDetailView,
+              meta: { title: '研究详情 - LightInfra' }
+            }
+          ]
         }
       ]
     }

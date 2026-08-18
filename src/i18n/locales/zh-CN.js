@@ -122,10 +122,7 @@
     searchPlaceholder: '想要查找什么？',
     sectionTitle: '新闻动态',
     sectionSubtitle: '产品发布 · 企业资讯 · 行业合作',
-    researchSectionSubtitle: '前言技术解读·学术研究·工程实践',
-    articleTag: '文章',
-    paperTag: '论文',
-    meetingTag: '会议'
+    researchSectionSubtitle: '前言技术解读·学术研究·工程实践'
   },
   contact: {
     bizContact: "商务合作请联系：business{'@'}infra.com",

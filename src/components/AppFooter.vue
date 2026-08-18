@@ -40,7 +40,7 @@
         <div class="footer-column">
           <h4 class="column-title">{{ t('footer.newsCenter') }}</h4>
           <router-link to="/news" class="column-link">{{ t('footer.news') }}</router-link>
-          <router-link to="/research" class="column-link">{{ t('footer.research') }}</router-link>
+          <router-link to="/news/research" class="column-link">{{ t('footer.research') }}</router-link>
         </div>
         <div class="footer-column">
           <h4 class="column-title">{{ t('footer.aboutLightInfra') }}</h4>

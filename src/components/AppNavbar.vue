@@ -37,7 +37,7 @@
             :key="link.path"
             :to="link.path"
             class="nav-link"
-            :class="{ 'nav-link-active': currentRoute === link.path }"
+            :class="{ 'nav-link-active': isLinkActive(link.path) }"
           >
             {{ t(link.i18nKey) }}
           </router-link>
@@ -108,6 +108,12 @@ const otherLinks = ref([
 const isProductsRoute = computed(() =>
   props.currentRoute.startsWith('/products')
 )
+
+// 导航项高亮：/news 及其子页（前沿研究 / 研究详情）都算「新闻中心」命中，其余按精确匹配
+const isLinkActive = (path) => {
+  if (path === '/news') return props.currentRoute.startsWith('/news')
+  return props.currentRoute === path
+}
 
 // 产品下拉按钮：在具体产品页时显示该产品名，否则显示「产品」
 const currentProductName = computed(() => {

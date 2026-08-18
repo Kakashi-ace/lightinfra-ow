@@ -2,20 +2,20 @@
   <div class="sub-nav">
     <div class="sub-nav-container">
       <div class="sub-nav-tabs">
-        <button
+        <router-link
           class="sub-nav-tab"
-          :class="{ 'sub-nav-tab-active': activeTab === 'news' }"
-          @click="emit('update:activeTab', 'news')"
+          :class="{ 'sub-nav-tab-active': route.name === 'news-list' }"
+          :to="{ name: 'news-list' }"
         >
           {{ t('news.newsTab') }}
-        </button>
-        <button
+        </router-link>
+        <router-link
           class="sub-nav-tab"
-          :class="{ 'sub-nav-tab-active': activeTab === 'research' }"
-          @click="emit('update:activeTab', 'research')"
+          :class="{ 'sub-nav-tab-active': route.name === 'research-list' }"
+          :to="{ name: 'research-list' }"
         >
           {{ t('news.researchTab') }}
-        </button>
+        </router-link>
       </div>
       <div class="search-box">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -35,24 +35,16 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const route = useRoute()
 
-const props = defineProps({
-  activeTab: {
-    type: String,
-    default: 'news'
-  }
-})
-
-const emit = defineEmits(['update:activeTab', 'search'])
+const emit = defineEmits(['search'])
 
 const keyword = ref('')
-
-// 复位搜索词（若父级需要，可监听外部关键字）
-watch(() => props.searchKeyword, (v) => { if (v !== undefined) keyword.value = v })
 </script>
 
 <style scoped>
@@ -84,6 +76,7 @@ watch(() => props.searchKeyword, (v) => { if (v !== undefined) keyword.value = v
   background: transparent;
   border: none;
   cursor: pointer;
+  text-decoration: none;
   transition: color 0.2s ease;
 }
 
