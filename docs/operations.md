@@ -1,6 +1,6 @@
 # CMS 运维方案（`apps/cms`）
 
-日常运维、备份恢复、发布、排障。部署见 [部署方案](./deployment.md)，自动化发布见 [发布基建方案](./release-infra.md)。
+日常运维、备份恢复、发布、排障。部署与自动化发布见 [部署与发布方案](./release.md)。
 
 ## 一、速查表
 
@@ -20,14 +20,14 @@
 
 | 内容 | 路径 |
 | --- | --- |
-| 代码 | `/var/www/li-web-cms` |
+| 代码（当前版本） | `/srv/lightinfra/cms/current` |
 | 数据库 | `/var/lib/strapi/data.db` |
-| 上传文件 | `/var/www/li-web-cms/public/uploads` |
+| 上传文件 | `/srv/lightinfra/cms/shared/uploads` |
 | 密钥 | `/etc/strapi/.env` (640 root:strapi) |
 | 备份 | `/var/backups/strapi/` |
 | systemd unit | `/etc/systemd/system/strapi.service` |
-| Nginx 站点 | `/etc/nginx/sites-available/li-web-cms` |
-| Nginx 日志 | `/var/log/nginx/cms-{access,error}.log` |
+| Nginx 站点 | `/etc/nginx/sites-available/lightinfra` |
+| Nginx 日志 | `/var/log/nginx/lightinfra-{access,error}.log` |
 
 ## 二、日志
 
@@ -50,9 +50,9 @@ sudo systemctl restart systemd-journald
 Nginx 日志由 `logrotate` 默认接管（`/etc/logrotate.d/nginx`），无需额外配置。查访问情况：
 
 ```bash
-sudo tail -f /var/log/nginx/cms-access.log
-sudo awk '{print $1}' /var/log/nginx/cms-access.log | sort | uniq -c | sort -rn | head -20
-sudo grep -c ' 429 ' /var/log/nginx/cms-access.log     # 触发限速的次数
+sudo tail -f /var/log/nginx/lightinfra-access.log
+sudo awk '{print $1}' /var/log/nginx/lightinfra-access.log | sort | uniq -c | sort -rn | head -20
+sudo grep -c ' 429 ' /var/log/nginx/lightinfra-access.log     # 触发限速的次数
 ```
 
 ## 三、备份
@@ -76,7 +76,7 @@ set -euo pipefail
 
 BACKUP_DIR=/var/backups/strapi
 DB=/var/lib/strapi/data.db
-UPLOADS=/var/www/li-web-cms/public/uploads
+UPLOADS=/srv/lightinfra/cms/shared/uploads
 STAMP=$(date +%F_%H%M)
 RETAIN_DAYS=30
 
@@ -143,11 +143,11 @@ ls -lh /var/backups/strapi/
 
 ```bash
 # 方式一：rsync 到另一台机器
-rsync -az --delete /var/backups/strapi/ backup@other-host:/backups/li-web-cms/
+rsync -az --delete /var/backups/strapi/ backup@other-host:/backups/lightinfra-cms/
 
 # 方式二：对象存储（阿里云 OSS / 腾讯云 COS / S3）
 # 用各家 CLI，例如 ossutil：
-ossutil cp -r /var/backups/strapi/ oss://your-bucket/li-web-cms/ --update
+ossutil cp -r /var/backups/strapi/ oss://your-bucket/lightinfra-cms/ --update
 ```
 
 对象存储建议开版本控制或 WORM（一次写入不可改），防止凭据泄露后备份被一并删除。
@@ -199,8 +199,8 @@ sudo journalctl -u strapi -n 50 --no-pager
 ```bash
 sudo systemctl stop strapi
 sudo tar -xzf /var/backups/strapi/uploads-2026-08-18_0330.tar.gz \
-  -C /var/www/li-web-cms/public/
-sudo chown -R strapi:strapi /var/www/li-web-cms/public/uploads
+  -C /srv/lightinfra/cms/shared/
+sudo chown -R strapi:strapi /srv/lightinfra/cms/shared/uploads
 sudo systemctl start strapi
 ```
 
@@ -216,68 +216,23 @@ curl -s https://cms.example.com/api/articles | head -c 300
 
 ## 五、发布流程
 
-改了代码、内容类型或依赖后的上线步骤。
+改了代码、内容类型或依赖后的上线步骤。常规发布走 Gitea Actions 网页触发，完整流程与设计见[部署与发布方案 §六](./release.md#六自动化发布基建)：仓库页 → Actions → `release-cms`（或 `release-web`）→ Run workflow。发布前自动备份数据库、构建在独立 release 目录完成（旧版本零停机继续服务）、健康检查失败自动回滚。
 
-### 发布脚本
+### 手动触发发布（应急/排障用）
+
+服务器上已装好的 `lightinfra-release` 脚本本身不依赖 Gitea，出现 CI/runner 故障时可以手工调用。前提是制品已经在 `/srv/lightinfra/incoming/` 就位（例如手工 `scp` 上传的 tar.gz）：
 
 ```bash
-sudo tee /usr/local/bin/strapi-deploy.sh > /dev/null <<'EOF'
-#!/usr/bin/env bash
-set -euo pipefail
-
-APP=/var/www/li-web-cms
-
-echo "==> 发布前备份"
-/usr/local/bin/strapi-backup.sh
-
-echo "==> 备份当前代码"
-rm -rf "${APP}.bak"
-cp -a "$APP" "${APP}.bak"
-
-echo "==> 拉取代码"
-cd "$APP"
-sudo -u strapi git pull --ff-only
-
-echo "==> 安装依赖"
-sudo -u strapi npm ci
-
-echo "==> 构建"
-sudo -u strapi NODE_ENV=production npm run build
-
-echo "==> 修正权限"
-chown -R root:strapi "$APP"
-chmod -R g+rX,g-w "$APP"
-chown -R strapi:strapi "$APP/public/uploads" "$APP/.strapi" "$APP/.tmp"
-
-echo "==> 重启"
-systemctl restart strapi
-sleep 8
-
-if systemctl is-active --quiet strapi && curl -sf -o /dev/null http://127.0.0.1:1337/admin; then
-  echo "==> 发布成功"
-else
-  echo "==> 发布失败，检查 journalctl -u strapi -n 80"
-  exit 1
-fi
-EOF
-
-sudo chmod 750 /usr/local/bin/strapi-deploy.sh
+sudo /usr/local/bin/lightinfra-release cms 20260818-142301-a3f0
 ```
 
-脚本假定已改用 Git（见[部署方案附录 B](./deployment.md#附录-b改用-git-部署)）。用压缩包的话把 `git pull` 换成解压步骤。
+参数含义、内部步骤（解包 → 备份 → 构建 → 切换 → 健康检查 → 失败自动回滚）见[部署与发布方案 §6.2](./release.md#62-服务器端发布脚本)。
 
-发布前先备份，是因为内容类型的 schema 变更会自动改数据库结构，且不可逆。
+发布前先备份，是因为内容类型的 schema 变更会自动改数据库结构，且不可逆——这也是脚本默认执行备份、不建议跳过的原因。
 
 ### 回滚
 
-```bash
-sudo systemctl stop strapi
-sudo rm -rf /var/www/li-web-cms
-sudo mv /var/www/li-web-cms.bak /var/www/li-web-cms
-sudo systemctl start strapi
-```
-
-若 schema 改动已经动过数据库结构，代码回滚不够，还要按[恢复流程](#四恢复流程)还原数据库。
+见[部署与发布方案 §八](./release.md#八回滚)。日常发布失败时脚本已自动回滚；需要手动回退到更早版本，或代码回滚无法覆盖数据库结构变更时，同一节有对应流程，数据库部分再配合本文档[恢复流程](#四恢复流程)。
 
 ### 只改了内容、没改代码
 
@@ -429,7 +384,7 @@ sudo journalctl -u strapi -n 100 --no-pager
 | `EACCES` / `EROFS` 写入失败 | systemd 沙箱缺少可写路径 | 把路径加进 unit 的 `ReadWritePaths`，`daemon-reload` 后重启 |
 | `Missing apiToken.salt` 之类 | `.env` 未被读到 | 确认 `EnvironmentFile=/etc/strapi/.env` 存在、组权限含 strapi |
 | `SQLITE_CANTOPEN` | 数据库路径不对或权限不足 | 检查 `DATABASE_FILENAME` 是绝对路径，且 `config/database.ts` 已改用 `path.resolve` |
-| `Cannot find module ... better_sqlite3.node` | 原生模块缺失或平台不匹配 | `cd /var/www/li-web-cms && sudo -u strapi npm rebuild better-sqlite3` |
+| `Cannot find module ... better_sqlite3.node` | 原生模块缺失或平台不匹配 | `cd /srv/lightinfra/cms/current && sudo -u strapi npm rebuild better-sqlite3` |
 | `EADDRINUSE` | 1337 被占用 | `sudo ss -tlnp \| grep 1337` 找到并处理 |
 | 进程被 killed 无报错 | 构建/启动时 OOM | `dmesg \| grep -i oom`，加 swap |
 
@@ -439,7 +394,7 @@ sudo journalctl -u strapi -n 100 --no-pager
 sudo systemctl is-active strapi                    # 后端是否在跑
 sudo ss -tlnp | grep 1337                          # 是否监听 127.0.0.1:1337
 curl -I http://127.0.0.1:1337/admin                # 本机能否直连
-sudo tail -30 /var/log/nginx/cms-error.log
+sudo tail -30 /var/log/nginx/lightinfra-error.log
 ```
 
 Nginx 配置正确但持续 502，且系统是 CentOS 系，检查 SELinux：
@@ -482,8 +437,8 @@ sudo grep CORS_ORIGINS /etc/strapi/.env
 ### 上传文件失败
 
 ```bash
-ls -ld /var/www/li-web-cms/public/uploads          # 期望 strapi:strapi
-sudo grep client_max_body_size /etc/nginx/sites-available/li-web-cms
+ls -ld /srv/lightinfra/cms/shared/uploads          # 期望 strapi:strapi
+sudo grep client_max_body_size /etc/nginx/sites-available/lightinfra
 df -h /
 ```
 
@@ -499,8 +454,8 @@ df -h /
 
 ```bash
 df -h /
-sudo du -sh /var/backups/strapi /var/www/li-web-cms/public/uploads \
-            /var/log/nginx /var/log/journal /var/www/li-web-cms/node_modules
+sudo du -sh /var/backups/strapi /srv/lightinfra/cms/shared/uploads \
+            /var/log/nginx /var/log/journal /srv/lightinfra/cms/current/node_modules
 ```
 
 按量级排查顺序：备份文件（缩短保留天数或推异地后删本地）、journal（设 `SystemMaxUse`）、Nginx 日志（logrotate 应已处理，检查配置是否生效）、uploads（清理媒体库中未被引用的文件）。
@@ -520,7 +475,7 @@ sudo systemctl start strapi
 ### 忘记管理员密码
 
 ```bash
-cd /var/www/li-web-cms
+cd /srv/lightinfra/cms/current
 sudo -u strapi npx strapi admin:reset-user-password
 ```
 
@@ -547,7 +502,7 @@ sudo -u strapi npx strapi admin:list-users
 
 ```bash
 # 1. 当前实例导出（含媒体文件）
-cd /var/www/li-web-cms
+cd /srv/lightinfra/cms/current
 sudo -u strapi npx strapi export --no-encrypt --file /tmp/pre-pg
 
 # 2. 装 Postgres，建库建用户
@@ -579,7 +534,7 @@ sudo -u strapi npx strapi import --file /tmp/pre-pg.tar.gz
 | 事项 | 频率 | 说明 |
 | --- | --- | --- |
 | 内容发布 | 按需 | 后台操作，无需运维介入 |
-| 代码发布 | 按需 | 走 `strapi-deploy.sh`，发布前自动备份 |
+| 代码发布 | 按需 | 走 Gitea Actions（`release-cms`/`release-web`），发布前自动备份，见[部署与发布方案 §五](./release.md) |
 | 数据备份 | 每日 03:30 | timer 自动，人工每周确认一次产物 |
 | 异地同步 | 每周 | 见[异地副本](#异地副本) |
 | 恢复演练 | 每季度 | 未验证的备份不算备份 |

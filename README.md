@@ -42,15 +42,14 @@ cd apps/cms && npm install && npm run develop
 cd apps/cms && cp .env.example .env
 ```
 
-然后按 `docs/deployment.md` 的说明生成密钥填入。
+然后按 `docs/release.md` 的说明生成密钥填入。
 
 ## 文档
 
 | 文档 | 内容 |
 | --- | --- |
-| [docs/deployment.md](docs/deployment.md) | 服务器首次部署 |
+| [docs/release.md](docs/release.md) | 部署与发布（首次手工部署 + Gitea Actions 自动化发布） |
 | [docs/operations.md](docs/operations.md) | 备份、监控、故障排查 |
-| [docs/release-infra.md](docs/release-infra.md) | 发布基建（Gitea Actions 网页触发发布） |
 
 ## 版本号
 
