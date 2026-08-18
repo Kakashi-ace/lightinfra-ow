@@ -1,27 +1,27 @@
 <template>
-  <footer class="app-footer">
+  <footer class="app-footer" :style="footerVars">
     <div class="footer-container">
       <div class="footer-left">
         <svg class="footer-logo" width="205" height="68" viewBox="0 0 112 37" fill="none">
-          <polygon points="6,0 28,0 28,26" fill="#FFFFFF" />
-          <polygon points="0,17 22,17 22,37" fill="#FFFFFF" />
-          <rect x="42" y="4" width="4" height="30" fill="#FFFFFF"/>
-          <rect x="52" y="12" width="4" height="22" fill="#FFFFFF"/>
-          <rect x="62" y="8" width="4" height="26" fill="#FFFFFF"/>
-          <rect x="72" y="15" width="4" height="18" fill="#FFFFFF"/>
-          <rect x="82" y="6" width="4" height="28" fill="#FFFFFF"/>
-          <rect x="92" y="11" width="4" height="23" fill="#FFFFFF"/>
+          <polygon points="6,0 28,0 28,26" fill="currentColor" />
+          <polygon points="0,17 22,17 22,37" fill="currentColor" />
+          <rect x="42" y="4" width="4" height="30" fill="currentColor"/>
+          <rect x="52" y="12" width="4" height="22" fill="currentColor"/>
+          <rect x="62" y="8" width="4" height="26" fill="currentColor"/>
+          <rect x="72" y="15" width="4" height="18" fill="currentColor"/>
+          <rect x="82" y="6" width="4" height="28" fill="currentColor"/>
+          <rect x="92" y="11" width="4" height="23" fill="currentColor"/>
         </svg>
         <div class="contact-info">
           <div class="contact-item">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="2" y="4" width="20" height="16" rx="2"/>
               <path d="M22 6L12 13L2 6"/>
             </svg>
             <span>{{ t('footer.bizContact') }}</span>
           </div>
           <div class="contact-item">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="2" y="4" width="20" height="16" rx="2"/>
               <path d="M22 6L12 13L2 6"/>
             </svg>
@@ -56,16 +56,29 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { resolveFooterVars } from '@/theme/footerTheme'
 
 const { t } = useI18n()
+
+const props = defineProps({
+  // 页脚配色主题，跟随当前路由的浅/深色页面设计，默认 dark 与改造前视觉一致
+  theme: {
+    type: String,
+    default: 'dark'
+  }
+})
+
+const footerVars = computed(() => resolveFooterVars(props.theme))
 </script>
 
 <style scoped>
 .app-footer {
   width: 100%;
-  background: #121212;
-  border-top: 1px solid #323232;
+  background: var(--footer-bg);
+  border-top: 1px solid var(--footer-border);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
 .footer-container {
@@ -85,6 +98,7 @@ const { t } = useI18n()
 
 .footer-logo {
   display: block;
+  color: var(--footer-text);
 }
 
 .contact-info {
@@ -98,13 +112,13 @@ const { t } = useI18n()
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #FFFFFF;
+  color: var(--footer-text-secondary);
 }
 
 .qr-code {
   width: 128px;
   height: 128px;
-  background: #D9D9D9;
+  background: var(--footer-qr-bg);
   border-radius: 20px;
 }
 
@@ -123,19 +137,19 @@ const { t } = useI18n()
 .column-title {
   font-size: 20px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--footer-text);
   margin: 0;
 }
 
 .column-link {
   font-size: 14px;
   font-weight: 400;
-  color: #FFFFFF;
+  color: var(--footer-text);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .column-link:hover {
-  color: #0073FF;
+  color: var(--footer-link-hover);
 }
 </style>

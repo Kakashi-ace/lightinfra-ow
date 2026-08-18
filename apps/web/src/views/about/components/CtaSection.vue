@@ -18,6 +18,9 @@ const { t } = useI18n()
   width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .cta-section {

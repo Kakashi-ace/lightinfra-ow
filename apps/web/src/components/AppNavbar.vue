@@ -1,5 +1,5 @@
 <template>
-  <header class="app-navbar">
+  <header class="app-navbar" :style="navVars">
     <div class="navbar-container">
       <!-- 左侧 Logo + 导航链接 -->
       <div class="navbar-left">
@@ -10,8 +10,7 @@
         <nav class="navbar-nav" role="navigation" aria-label="主导航">
           <!-- 产品下拉菜单（antd, hover 弹出） -->
           <a-dropdown class="nav-dropdown" :trigger="['hover']" placement="bottomLeft">
-            <a
-              href="/products"
+            <span
               class="nav-link nav-dropdown-toggle"
               :class="{ 'nav-link-active': isProductsRoute }"
             >
@@ -19,7 +18,7 @@
               <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
-            </a>
+            </span>
             <template #overlay>
               <a-menu :selected-keys="[currentRoute]">
                 <a-menu-item key="/products">
@@ -77,9 +76,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { LOCALE_KEY } from '@/i18n'
+import { resolveNavbarVars } from '@/theme/navbarTheme'
 
 const { t, locale } = useI18n()
 
@@ -87,10 +87,32 @@ const props = defineProps({
   currentRoute: {
     type: String,
     default: ''
+  },
+  // 导航栏配色主题，跟随当前路由的浅/深色页面设计，默认 dark 与改造前视觉一致
+  theme: {
+    type: String,
+    default: 'dark'
   }
 })
 
 const isOpen = ref(false)
+
+// 滚动状态：未滚动时导航栏透明悬浮在 Hero 上；滚动过阈值后固化为带背景的实体导航条，
+// 使导航栏的可读性不再依赖 Hero 具体背景色（Hero 有深色蒙层/蓝色渐变/纯色等多种情况）
+const SCROLL_THRESHOLD = 16
+const isScrolled = ref(false)
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > SCROLL_THRESHOLD
+}
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  handleScroll()
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
+const navVars = computed(() => resolveNavbarVars(props.theme, isScrolled.value))
 
 const productLinks = ref([
   { i18nKey: 'footer.opticsgpt', path: '/products/opticsgpt' },
@@ -172,6 +194,11 @@ const vClickOutside = {
   z-index: 1000;
   display: flex;
   justify-content: center;
+  background: var(--nav-bg);
+  backdrop-filter: var(--nav-backdrop);
+  -webkit-backdrop-filter: var(--nav-backdrop);
+  box-shadow: var(--nav-shadow);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .navbar-container {
@@ -213,22 +240,27 @@ const vClickOutside = {
   font-size: 14px;
   font-weight: 500;
   line-height: 16px;
-  color: #BBBBBB;
+  color: var(--nav-text);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.25s ease;
   white-space: nowrap;
 }
 
 .nav-link:hover {
-  color: #FFFFFF;
+  color: var(--nav-text-hover);
 }
 
 .nav-link-active {
-  color: #0073FF;
+  color: var(--nav-active-text);
+  background: var(--nav-active-bg);
+  border-radius: 999px;
+  padding: 6px 14px;
+  margin: -6px -14px;
+  transition: color 0.25s ease, background-color 0.25s ease;
 }
 
 .nav-link-active:hover {
-  color: #0073FF;
+  color: var(--nav-active-text);
 }
 
 .navbar-right {
@@ -254,13 +286,13 @@ const vClickOutside = {
 
 .btn-outline {
   background: transparent;
-  color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: var(--nav-btn-text);
+  border: 1px solid var(--nav-btn-border);
 }
 
 .btn-outline:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #FFFFFF;
+  background: var(--nav-btn-hover-bg);
+  border-color: var(--nav-btn-border-hover);
 }
 
 .btn-filled {
@@ -331,16 +363,16 @@ const vClickOutside = {
 
 :global(.ant-dropdown .ant-dropdown-menu-item-selected) {
   background: transparent !important;
-  color: #0073FF;
+  color: var(--brand-accent);
 }
 
 :global(.ant-dropdown .ant-dropdown-menu-item-selected a) {
-  color: #0073FF !important;
+  color: var(--brand-accent) !important;
 }
 
 :global(.ant-dropdown .ant-dropdown-menu-item-selected:not(.ant-dropdown-menu-item-disabled):hover) {
   background: rgba(255, 255, 255, 0.05) !important;
-  color: #0073FF !important;
+  color: var(--brand-accent) !important;
 }
 
 
@@ -395,11 +427,11 @@ const vClickOutside = {
 }
 
 .dropdown-item-active {
-  color: #0073FF;
+  color: var(--brand-accent);
 }
 
 .dropdown-item-active:hover {
-  color: #0073FF;
+  color: var(--brand-accent);
 }
 
 /* 响应式 */

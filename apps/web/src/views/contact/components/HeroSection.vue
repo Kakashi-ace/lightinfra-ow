@@ -40,7 +40,7 @@ const { t } = useI18n()
 .hero-title {
   font-size: 96px;
   font-weight: 600;
-  line-height: 113px;
+  line-height: 1.3;
   margin: 0 0 24px 0;
   background: linear-gradient(90deg, #020952 14.49%, #000000 59.15%, #002B81 85.39%);
   -webkit-background-clip: text;

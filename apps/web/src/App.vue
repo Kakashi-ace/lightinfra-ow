@@ -16,6 +16,11 @@ html {
   scroll-behavior: smooth;
 }
 
+:root {
+  /* 品牌强调色：链接 hover / 选中态，深浅主题通用，供各组件 scoped 样式引用 */
+  --brand-accent: #0073FF;
+}
+
 body {
   font-family: system-ui, -apple-system, sans-serif;
   background: #121212;
