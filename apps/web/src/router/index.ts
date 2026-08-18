@@ -9,10 +9,10 @@ import IFTSProductView from '@/views/products/ifts/IftsProductView.vue'
 import InstrumentProductView from '@/views/products/instrument/InstrumentProductView.vue'
 import AboutView from '@/views/about/AboutView.vue'
 import ContactView from '@/views/contact/ContactView.vue'
-import NewsView from '@/views/news/NewsView.vue'
-import NewsListView from '@/views/news/list/NewsListView.vue'
-import ResearchListView from '@/views/news/research/ResearchListView.vue'
-import ArticleDetailView from '@/views/news/detail/ArticleDetailView.vue'
+import NewsView from '@/views/news-research/NewsView.vue'
+import NewsListView from '@/views/news-research/news/NewsListView.vue'
+import ResearchListView from '@/views/news-research/research/ResearchListView.vue'
+import ArticleDetailView from '@/views/news-research/detail/ArticleDetailView.vue'
 
 // 让 to.meta.title 有类型，而不是 any
 declare module 'vue-router' {
