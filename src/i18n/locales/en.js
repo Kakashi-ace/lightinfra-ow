@@ -2,7 +2,7 @@
   nav: {
     language: 'Language',
     products: 'Products',
-    productCenter: 'Products Center',
+    productCenter: 'Products',
     newsCenter: 'News',
     about: 'About LightInfra',
     contact: 'Contact',
@@ -26,7 +26,6 @@
     aboutLightInfra: 'About LightInfra',
     contact: 'Contact Us',
     contactUs: 'Contact',
-    joinUs: 'Join Us',
     bizContact: "Business: business{'@'}infra.com",
     hrContact: "Careers: hr{'@'}infra.com"
   },
@@ -60,9 +59,7 @@
     meetingTag: 'Conference',
     newsFeaturedTitle: 'SJTU Professor Yililin team releases intelligent optical transmission open-source simulation platform',
     newsFeaturedExcerpt: 'On January 6, 2023, hosted by the Optical Communication Committee of China Institute of Communications, Pengcheng Laboratory, the State Key Laboratory of Advanced Optical Communication Systems and Networks...',
-    newsItemExcerpt: 'Co-released by Pengcheng Laboratory and the regional optical fiber communication network...',
-    ctaTitle: 'AI For Optics, Try It Now',
-    joinUs: 'Join Us'
+    newsItemExcerpt: 'Co-released by Pengcheng Laboratory and the regional optical fiber communication network...'
   },
   about: {
     title: 'About LightInfra',

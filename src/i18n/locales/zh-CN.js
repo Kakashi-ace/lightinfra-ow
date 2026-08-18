@@ -2,7 +2,7 @@
   nav: {
     language: '语言',
     products: '产品',
-    productCenter: '产品中心',
+    productCenter: '产品',
     newsCenter: '新闻中心',
     about: '关于 LightInfra',
     contact: '联系我们',
@@ -26,7 +26,6 @@
     aboutLightInfra: '关于LightInfra',
     contact: '联系我们',
     contactUs: '联系方式',
-    joinUs: '加入我们',
     bizContact: "商务合作请联系：business{'@'}infra.com",
     hrContact: "招聘咨询请联系：hr{'@'}infra.com"
   },
@@ -60,9 +59,7 @@
     meetingTag: '会议',
     newsFeaturedTitle: '上海交大义理林教授团队发布智能光传输开源仿真平台',
     newsFeaturedExcerpt: '2023年1月6日，由中国通信学会光通信委员会、鹏城实验室、区域光纤通信网与新型光通信系统国家重点实验室联合主办的智能光传输专...',
-    newsItemExcerpt: '由鹏城实验室与区域光纤通信网联合发布...',
-    ctaTitle: 'AI For Optics，立即试用',
-    joinUs: '加入我们'
+    newsItemExcerpt: '由鹏城实验室与区域光纤通信网联合发布...'
   },
   about: {
     title: '关于LightInfra',
