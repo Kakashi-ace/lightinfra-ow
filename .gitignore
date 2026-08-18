@@ -2,6 +2,9 @@
 # 各应用自己的规则写在 apps/web/.gitignore 和 apps/cms/.gitignore，
 # 那样路径相对各自目录，不必在这里维护 apps/ 前缀。
 
+# ===== 根目录自身的依赖（如 concurrently）=====
+/node_modules/
+
 # ===== 系统/编辑器杂项 =====
 .DS_Store
 Thumbs.db
