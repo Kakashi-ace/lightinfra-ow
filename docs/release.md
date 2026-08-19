@@ -105,7 +105,7 @@ CI 从 git clone 出来的工作区**没有 `public/media/`**，`vite build` 产
 
 ### 待确认事项
 
-前四条阻塞实施，后五条可以边做边定。
+前四条阻塞实施，后四条可以边做边定。
 
 1. **代码出境范围的判断** —— 见上一小节，决定后端能否放公网云
 2. **域名** —— 是否已解析到服务器 IP，证书邮箱用哪个；前端和后台是否共用一个域名（本方案假设共用，见三）
@@ -114,8 +114,9 @@ CI 从 git clone 出来的工作区**没有 `public/media/`**，`vite build` 产
 5. **`/admin` 是否加 IP 白名单** —— 出口 IP 固定则强烈建议加；动态 IP 不要加，会把自己锁在外面
 6. **媒体是否走对象存储** —— 92 MB 视频从服务器直出会吃满出口带宽，现在不上 CDN 也能跑，但是首个可预见的瓶颈
 7. **Gitea act_runner 装在哪** —— 内网另一台机器，还是 Gitea 服务器本机。本机最省事，但构建（`npm ci` + Vite build）会和 Gitea 抢 CPU
-8. **是否按 tag 触发发布** —— 当前只支持网页手动 `workflow_dispatch`，需要时可加 `on: push: tags: ['v*']`
-9. **预发布环境** —— 当前方案只有生产一套，见[十一、方案边界](#十一这套方案的边界)
+8. **预发布环境** —— 当前方案只有生产一套，见[十一、方案边界](#十一这套方案的边界)
+
+（原「是否按 tag 触发发布」一项已定案，见[六、自动化发布基建 § 版本号](#版本号)：发布改为 tag 强绑定，不再是可选项。）
 
 ## 三、目标架构
 
@@ -151,20 +152,20 @@ CI 从 git clone 出来的工作区**没有 `public/media/`**，`vite build` 产
 /srv/lightinfra/
 ├── web/
 │   ├── releases/
-│   │   ├── 20260818-142301-a3f0/     ← 每次发布一个新目录（0.6 MB）
-│   │   └── 20260818-101502-9c21/
+│   │   ├── v1.2.0/                   ← 目录名 = tag 去掉命名空间前缀（0.6 MB）
+│   │   └── v1.1.0/
 │   ├── shared/
 │   │   └── media/                    ← 103 MB，持久，不随发布变动
-│   └── current -> releases/20260818-142301-a3f0
+│   └── current -> releases/v1.2.0
 │
 ├── cms/
 │   ├── releases/
-│   │   ├── 20260818-142301-a3f0/     ← 含 node_modules 与构建产物
-│   │   └── 20260818-101502-9c21/
+│   │   ├── v1.0.1/                   ← 含 node_modules 与构建产物
+│   │   └── v1.0.0/
 │   ├── shared/
 │   │   ├── uploads/                  ← Strapi 上传的媒体，持久
 │   │   └── .env -> /etc/strapi/.env
-│   └── current -> releases/20260818-142301-a3f0
+│   └── current -> releases/v1.0.1
 │
 └── backups/                          ← 发布前自动备份数据库
 ```
@@ -846,7 +847,7 @@ sudo systemctl reload nginx
 
 ### 网页操作路径
 
-Gitea 仓库页 → **Actions** → 左侧选工作流（`release-web` 或 `release-cms`）→ 右上 **Run workflow** → 选分支 `main`、填参数 → 执行。实时日志与历史记录都在同一页面。
+Gitea 仓库页 → **Actions** → 左侧选工作流（`release-web` 或 `release-cms`）→ 右上 **Run workflow** → **ref 选择要发布的 tag**（如 `web/v1.2.0`，不是 `main`）、填参数 → 执行。实时日志与历史记录都在同一页面。
 
 **两个应用各自持有自己的工作流文件**，`.gitea/workflows/release-web.yml` 与 `.gitea/workflows/release-cms.yml`，互不依赖。前端发前端，后端发后端。之所以不合并成一个工作流，是因为两侧发布本来就不必强耦合 —— 改一段文案不需要重启 Strapi，加一个内容字段不需要重发前端。合并后每次发布都要么多做一半无用功，要么就得加一堆条件判断。需要协同发布时，依次点两次即可。
 
@@ -868,37 +869,39 @@ Gitea 仓库页 → **Actions** → 左侧选工作流（`release-web` 或 `rele
 
 ### 完整时序
 
-两侧流程同构，差异只在第 ④ 与第 ⑦ 步。
+两侧流程同构，差异只在第 ⑤ 与第 ⑧ 步。
 
 ```
-① 网页触发（选 main 分支 + 参数）
+① 网页触发（ref 选要发布的 tag，如 web/v1.2.0 + 参数）
       │
-② runner: git clone --depth 1 --branch main
+② runner: 校验 ref 是 tag 且前缀与应用匹配，不符直接失败
       │
-③ runner: 版本号 = <UTC时间戳>-<commit短哈希>
+③ runner: git clone --depth 1 --branch <tag>
       │
-④ runner: 打包
+④ runner: 版本号 = tag 去掉命名空间前缀（如 web/v1.2.0 → v1.2.0）
+      │
+⑤ runner: 打包
    ├─ 前端：npm ci && npm run build → 打包 dist/
    └─ 后端：直接打包源码（排除 node_modules/.git/.env）
       │
-⑤ runner: rsync 制品 → 服务器 /srv/lightinfra/incoming/
+⑥ runner: rsync 制品 → 服务器 /srv/lightinfra/incoming/
       │
-⑥ runner: ssh 调用服务器上的 lightinfra-release 脚本
+⑦ runner: ssh 调用服务器上的 lightinfra-release 脚本
       │
    ── 以下在服务器执行 ──
       │
-⑦ 解包到 releases/<版本>/，然后：
+⑧ 解包到 releases/<版本>/，然后：
    ├─ 前端：无构建步骤（产物已就绪）
    └─ 后端：备份数据库 → 在新目录内 npm ci && npm run build
       │        （旧版本仍在服务，此步零停机）
       │
-⑧ 建立 shared/ 符号链接（uploads / .env / media）
+⑨ 建立 shared/ 符号链接（uploads / .env / media）
       │
-⑨ 原子切换 current 符号链接
+⑩ 原子切换 current 符号链接
       │
-⑩ 前端：nginx reload ／ 后端：systemctl restart strapi
+⑪ 前端：nginx reload ／ 后端：systemctl restart strapi
       │
-⑪ 健康检查（HTTP 探测）
+⑫ 健康检查（HTTP 探测）
       │
       ├── 通过 → 清理旧 release（保留 5 个）→ 成功
       └── 失败 → current 切回上一版本 → 重启 → 非零退出
@@ -908,11 +911,16 @@ Gitea 仓库页 → **Actions** → 左侧选工作流（`release-web` 或 `rele
 
 ### 版本号
 
-用 `<UTC时间戳>-<commit短哈希>`，例如 `20260818-142301-a3f0`。理由：单调递增便于排序、直接对应 git commit 便于追溯、不需要人工维护。
+发布与 tag 强绑定：
 
-这与团队规范 SemVer tag 不冲突 —— SemVer 是**对外的版本标识**（打在 main 上、写进 CHANGELOG），发布版本号是**部署实例的标识**。一个 SemVer tag 可能对应多次部署（比如修了部署脚本重发一次）。
+- tag 沿用命名空间前缀：`web/vX.Y.Z`、`cms/vX.Y.Z`，在 `main` 上打。
+- 部署入口仍是 Gitea 网页 `workflow_dispatch`，但**触发时 ref 要选 tag，不是选 `main` 分支**。工作流第一步会校验 `github.ref_type` 必须是 `tag`、且 tag 前缀与应用匹配（`release-web` 只接受 `web/v*`，`release-cms` 只接受 `cms/v*`），选错直接失败退出，不会跑到部署那一步。
+- 部署版本号（也是 `releases/<版本>/` 目录名）就是 tag 去掉命名空间前缀的部分，例如 `web/v1.2.0` → `v1.2.0`。不再需要额外的时间戳方案。
+- 重复部署同一个 tag（比如上次发布失败了重跑一次）是允许的场景：脚本对同名 release 目录做的是幂等覆盖（先 `rm -rf` 再解包），天然支持，不需要每次都造一个新版本号。
 
-需要按 tag 发布时，工作流加一个 `on: push: tags: ['v*']` 触发器即可，与手动触发并存。
+这样"打 tag"和"点击发布"就有了明确的因果关系：**main 上没有对应 tag，Run workflow 时压根选不出可发布的 ref**；反过来，打了 tag 不会自动触发部署，仍要去网页手动点击——tag 是发布的准入条件，不是自动扳机，网页点击仍然是唯一的发布动作入口，符合团队"在网页上操作"的诉求。
+
+代价：不再支持"不打 tag、直接发某个 commit"的快速通道。出现需要紧急修复的场景，也要先在 `main` 上打一个 tag 再走发布——这是有意的收紧，为的是让每一次生产发布都对应一条可追溯、写进 CHANGELOG 的版本记录，而不是让 tag 变成可有可无的事后标签。
 
 ### 6.1 一次性准备
 
@@ -1146,11 +1154,22 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: 校验触发来源
+        run: |
+          if [[ "${{ github.ref_type }}" != "tag" ]]; then
+            echo "release-web 只能用 tag 触发（Run workflow 时 ref 选 tag，不是分支），当前 ref: ${{ github.ref }}"
+            exit 1
+          fi
+          if [[ "${{ github.ref_name }}" != web/v* ]]; then
+            echo "release-web 只接受 web/vX.Y.Z 格式的 tag，当前: ${{ github.ref_name }}"
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - name: 计算版本号
         id: ver
-        run: echo "version=$(date -u +%Y%m%d-%H%M%S)-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+        run: echo "version=${GITHUB_REF_NAME#web/}" >> "$GITHUB_OUTPUT"
 
       - run: npm ci --no-audit --no-fund
 
@@ -1195,7 +1214,9 @@ jobs:
         run: rm -f ~/.ssh/id_ed25519
 ```
 
-两点说明：
+三点说明：
+
+**`校验触发来源` 放在最前面，先于 `checkout`。** 不符合条件时直接失败退出，不浪费一次 clone + npm ci 的时间；也是"打 tag 是发布准入条件"这个设计的落地点——选错 ref（分支，或者别的应用的 tag）在这一步就会被挡下来。
 
 **`sync_media` 那一步是故意让它失败的。** 媒体不在 git 里，runner 从 clone 出来的工作区拿不到它 —— 这个参数在 runner 侧无法真正实现。保留它并给出明确提示，比让人误以为勾了就同步了要好。真正的同步只能从有媒体的机器（本地）发起。
 
@@ -1231,11 +1252,22 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: 校验触发来源
+        run: |
+          if [[ "${{ github.ref_type }}" != "tag" ]]; then
+            echo "release-cms 只能用 tag 触发（Run workflow 时 ref 选 tag，不是分支），当前 ref: ${{ github.ref }}"
+            exit 1
+          fi
+          if [[ "${{ github.ref_name }}" != cms/v* ]]; then
+            echo "release-cms 只接受 cms/vX.Y.Z 格式的 tag，当前: ${{ github.ref_name }}"
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - name: 计算版本号
         id: ver
-        run: echo "version=$(date -u +%Y%m%d-%H%M%S)-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+        run: echo "version=${GITHUB_REF_NAME#cms/}" >> "$GITHUB_OUTPUT"
 
       - name: 构建自检
         run: |
@@ -1276,11 +1308,13 @@ jobs:
         run: rm -f ~/.ssh/id_ed25519
 ```
 
+「校验触发来源」同前端一致，放在最前面、先于 checkout，选错 ref 直接失败退出。
+
 「构建自检」这一步值得解释：制品里不含 `node_modules`，真正的构建在服务器上做。但如果代码有编译错误，等到服务器上才发现就晚了（虽然有零停机保护，但白等一轮）。所以在 runner 上先完整跑一遍 `npm ci && build`，把编译错误挡在上传之前。
 
 用 `.env.example` 作为构建期占位：Strapi 的 `config/admin.ts` 在构建时会读 `ADMIN_JWT_SECRET` 等键，缺失会报错。这份占位密钥只在 runner 容器内存在，不进制品（打包已 `--exclude=.env`），也不会到服务器。
 
-**两个工作流都靠 `defaults.run.working-directory` 定位应用目录。** `npm ci`、`npm run build`、`tar` 都在 `apps/web` 或 `apps/cms` 里执行，制品结构和服务器端脚本一致。注意 `defaults` 只作用于 `run` 步骤，`actions/checkout@v4` 仍然 checkout 整个仓库，这是需要的（版本号要靠 `git rev-parse`）。
+**两个工作流都靠 `defaults.run.working-directory` 定位应用目录。** `npm ci`、`npm run build`、`tar` 都在 `apps/web` 或 `apps/cms` 里执行，制品结构和服务器端脚本一致。注意 `defaults` 只作用于 `run` 步骤，`actions/checkout@v4` 仍然 checkout 整个仓库，这是需要的——构建要用到完整源码，即便版本号已经不再依赖 `git rev-parse`、而是直接从触发用的 tag 名截取。
 
 ## 七、媒体资源同步
 
@@ -1416,7 +1450,7 @@ monorepo 结构合并、前后端合入同一仓库、根 `.gitignore` 与各应
 
 **阶段四：接上 Gitea Actions（1 天）**
 
-注册 act_runner、配 4 个 secret、加两个 workflow 文件。前端先跑，因为前端发布不涉及数据库和服务重启，出错代价最低。跑通后再接后端。
+`.gitea/workflows/release-web.yml`、`release-cms.yml` 两个工作流文件已随本次改动写入仓库（含 tag 校验与版本号计算逻辑，见 §6.4、§6.5）。本阶段剩余的是服务器与 Gitea 后台操作，不是代码改动：注册 act_runner、配 4 个 secret（`DEPLOY_SSH_KEY`/`DEPLOY_HOST`/`DEPLOY_USER`/`DEPLOY_KNOWN_HOSTS`）、按 §6.1 建 `deployer` 用户和 sudoers。前端先跑，因为前端发布不涉及数据库和服务重启，出错代价最低。跑通后再接后端。
 
 **阶段五：备份与监控（半天）**
 

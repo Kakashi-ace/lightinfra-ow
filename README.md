@@ -60,4 +60,6 @@ web/v1.2.0
 cms/v1.0.0
 ```
 
-这偏离了团队规范 §9.1 的 `v1.4.0` 格式，是 monorepo 的必要调整。CHANGELOG 按应用分节维护。
+这偏离了团队规范 §9.1 的 `v1.4.0` 格式，是 monorepo 的必要调整——一个仓库里有两个独立发版单元时给 tag 加命名空间前缀是业界通用做法（Go 的 multi-module repo、`semantic-release-monorepo` 等都是这么处理的），不是权宜之计。
+
+发布与 tag 强绑定：Gitea Actions 的 `release-web` / `release-cms` 工作流触发时 ref 必须选对应前缀的 tag，选了分支或者选错前缀的 tag 会在工作流第一步直接失败。也就是说**打 tag 是发布的准入条件**——`main` 上没有对应 tag 就没有可发布的 ref；但打了 tag 不会自动部署，仍要去 Gitea 网页手动点击 Run workflow。细节见 [docs/release.md § 版本号](docs/release.md#版本号)。CHANGELOG 按应用分节维护。

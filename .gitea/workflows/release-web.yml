@@ -1,0 +1,82 @@
+name: release-web
+run-name: 发布前端 ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      sync_media:
+        description: '同步媒体资源（103MB，仅媒体有变更时勾选）'
+        type: boolean
+        default: false
+
+concurrency:
+  group: release-web
+  cancel-in-progress: false
+
+# 所有命令都在 apps/web 下执行；仓库根没有构建用的 package.json
+defaults:
+  run:
+    working-directory: apps/web
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 校验触发来源
+        run: |
+          if [[ "${{ github.ref_type }}" != "tag" ]]; then
+            echo "release-web 只能用 tag 触发（Run workflow 时 ref 选 tag，不是分支），当前 ref: ${{ github.ref }}"
+            exit 1
+          fi
+          if [[ "${{ github.ref_name }}" != web/v* ]]; then
+            echo "release-web 只接受 web/vX.Y.Z 格式的 tag，当前: ${{ github.ref_name }}"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - name: 计算版本号
+        id: ver
+        run: echo "version=${GITHUB_REF_NAME#web/}" >> "$GITHUB_OUTPUT"
+
+      - run: npm ci --no-audit --no-fund
+
+      # npm run build 已经串了 type-check，不需要单独一步
+      - run: npm run build
+
+      - name: 校验产物
+        run: |
+          test -f dist/index.html || { echo "dist/index.html 缺失"; exit 1; }
+          echo "产物大小: $(du -sh dist | cut -f1)"
+
+      - name: 打包
+        run: tar -czf web-${{ steps.ver.outputs.version }}.tar.gz -C dist .
+
+      - name: 配置 SSH
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: 上传制品
+        run: |
+          scp web-${{ steps.ver.outputs.version }}.tar.gz \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/srv/lightinfra/incoming/
+
+      - name: 同步媒体
+        if: ${{ inputs.sync_media }}
+        run: |
+          echo "媒体不在版本控制内，runner 无法提供。"
+          echo "请按文档 §七 从本地手工 rsync。"
+          exit 1
+
+      - name: 执行发布
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+            "lightinfra-release web ${{ steps.ver.outputs.version }}"
+
+      - name: 清理密钥
+        if: always()
+        run: rm -f ~/.ssh/id_ed25519

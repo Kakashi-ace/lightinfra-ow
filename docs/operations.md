@@ -216,14 +216,14 @@ curl -s https://cms.example.com/api/articles | head -c 300
 
 ## 五、发布流程
 
-改了代码、内容类型或依赖后的上线步骤。常规发布走 Gitea Actions 网页触发，完整流程与设计见[部署与发布方案 §六](./release.md#六自动化发布基建)：仓库页 → Actions → `release-cms`（或 `release-web`）→ Run workflow。发布前自动备份数据库、构建在独立 release 目录完成（旧版本零停机继续服务）、健康检查失败自动回滚。
+改了代码、内容类型或依赖后的上线步骤。常规发布走 Gitea Actions 网页触发，完整流程与设计见[部署与发布方案 §六](./release.md#六自动化发布基建)：先在 `main` 上打对应命名空间前缀的 tag（如 `cms/v1.0.3`），再到仓库页 → Actions → `release-cms`（或 `release-web`）→ Run workflow → ref 选那个 tag。发布前自动备份数据库、构建在独立 release 目录完成（旧版本零停机继续服务）、健康检查失败自动回滚。
 
 ### 手动触发发布（应急/排障用）
 
-服务器上已装好的 `lightinfra-release` 脚本本身不依赖 Gitea，出现 CI/runner 故障时可以手工调用。前提是制品已经在 `/srv/lightinfra/incoming/` 就位（例如手工 `scp` 上传的 tar.gz）：
+服务器上已装好的 `lightinfra-release` 脚本本身不依赖 Gitea，出现 CI/runner 故障时可以手工调用，此时不受"必须先打 tag"的限制——版本字符串随便取，只要制品已经在 `/srv/lightinfra/incoming/` 就位（例如手工 `scp` 上传的 tar.gz）：
 
 ```bash
-sudo /usr/local/bin/lightinfra-release cms 20260818-142301-a3f0
+sudo /usr/local/bin/lightinfra-release cms v1.0.3
 ```
 
 参数含义、内部步骤（解包 → 备份 → 构建 → 切换 → 健康检查 → 失败自动回滚）见[部署与发布方案 §6.2](./release.md#62-服务器端发布脚本)。

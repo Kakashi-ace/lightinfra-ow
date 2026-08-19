@@ -1,0 +1,77 @@
+name: release-cms
+run-name: 发布后端 ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_backup:
+        description: '跳过数据库备份（不建议）'
+        type: boolean
+        default: false
+
+concurrency:
+  group: release-cms
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: apps/cms
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 校验触发来源
+        run: |
+          if [[ "${{ github.ref_type }}" != "tag" ]]; then
+            echo "release-cms 只能用 tag 触发（Run workflow 时 ref 选 tag，不是分支），当前 ref: ${{ github.ref }}"
+            exit 1
+          fi
+          if [[ "${{ github.ref_name }}" != cms/v* ]]; then
+            echo "release-cms 只接受 cms/vX.Y.Z 格式的 tag，当前: ${{ github.ref_name }}"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - name: 计算版本号
+        id: ver
+        run: echo "version=${GITHUB_REF_NAME#cms/}" >> "$GITHUB_OUTPUT"
+
+      - name: 构建自检
+        run: |
+          npm ci --no-audit --no-fund
+          cp .env.example .env      # 构建期需要密钥占位，不用于运行
+          NODE_ENV=production npm run build
+
+      - name: 打包源码
+        run: |
+          # 打包 apps/cms 的内容，制品内不带 apps/cms/ 前缀，
+          # 服务器端解包逻辑与仓库结构无关
+          tar -czf cms-${{ steps.ver.outputs.version }}.tar.gz \
+            --exclude=node_modules --exclude=dist \
+            --exclude=.env --exclude=.tmp --exclude=.strapi \
+            --exclude=public/uploads \
+            .
+
+      - name: 配置 SSH
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: 上传制品
+        run: |
+          scp cms-${{ steps.ver.outputs.version }}.tar.gz \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/srv/lightinfra/incoming/
+
+      - name: 执行发布
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+            "SKIP_BACKUP=${{ inputs.skip_backup }} lightinfra-release cms ${{ steps.ver.outputs.version }}"
+
+      - name: 清理密钥
+        if: always()
+        run: rm -f ~/.ssh/id_ed25519
