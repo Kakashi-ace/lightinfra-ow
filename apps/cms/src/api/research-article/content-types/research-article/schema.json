@@ -1,11 +1,11 @@
 {
   "kind": "collectionType",
-  "collectionName": "articles",
+  "collectionName": "research_articles",
   "info": {
-    "singularName": "article",
-    "pluralName": "articles",
-    "displayName": "Article",
-    "description": "新闻与研究文章"
+    "singularName": "research-article",
+    "pluralName": "research-articles",
+    "displayName": "Research Article",
+    "description": "前沿研究文章，正文为富文本，点击进入站内详情页"
   },
   "options": {
     "draftAndPublish": true
@@ -15,10 +15,6 @@
     "title": {
       "type": "string",
       "required": true
-    },
-    "subtitle": {
-      "type": "text",
-      "required": false
     },
     "excerpt": {
       "type": "text",
@@ -33,17 +29,13 @@
       "multiple": false,
       "allowedTypes": ["images"]
     },
-    "category": {
-      "type": "enumeration",
-      "enum": ["news", "research"],
-      "default": "news",
-      "required": true
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "required": false
     },
-    "tags": {
-      "type": "json"
-    },
-    "publishedAt": {
-      "type": "datetime",
+    "order": {
+      "type": "integer",
       "required": false
     }
   }
