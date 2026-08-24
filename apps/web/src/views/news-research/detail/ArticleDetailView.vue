@@ -8,16 +8,18 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import DetailHeroSection from './components/DetailHeroSection.vue'
 import DetailBodySection from './components/DetailBodySection.vue'
-import { fetchArticle } from '@/api/articles'
+import { fetchResearchDetail } from '@/api/research'
 
 const route = useRoute()
+const { t } = useI18n()
 
 // 渲染数据：默认占位，拉取成功后覆盖
 const articleData = ref({
-  tag: '论文',
-  title: '文章加载中…',
+  tag: t('news.detailLoadingTag'),
+  title: t('news.detailLoadingTitle'),
   date: '',
   paragraphs: [],
 })
@@ -27,7 +29,7 @@ const controller = new AbortController()
 
 onMounted(async () => {
   try {
-    const detail = await fetchArticle(route.params.id, { signal: controller.signal })
+    const detail = await fetchResearchDetail(route.params.id, { signal: controller.signal })
     if (detail) articleData.value = detail
   } catch (e) {
     if (!e?.isCanceled) {

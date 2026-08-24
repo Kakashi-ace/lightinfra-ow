@@ -1,25 +1,13 @@
 <template>
   <section class="hero-section">
     <div class="hero-bg">
-      <div class="hero-gradient"></div>
-      <div class="hero-decoration">
-        <div class="deco-card deco-card-1"></div>
-        <div class="deco-card deco-card-2"></div>
-        <div class="deco-card deco-card-3"></div>
-      </div>
+      <img class="hero-bg-image" src="/media/IFTS-hero-background.png" alt="" />
     </div>
     <div class="hero-content">
       <div class="hero-left">
         <h1 class="hero-title">{{ t('product.ifts.heroTitle') }}</h1>
         <p class="hero-desc">{{ t('product.ifts.heroDesc') }}</p>
-        <button class="hero-btn" @click="emit('start')">{{ t('common.startUsing') }}</button>
-      </div>
-      <div class="hero-right">
-        <div class="deco-cards">
-          <div class="deco-card-large"></div>
-          <div class="deco-card-medium"></div>
-          <div class="deco-card-small"></div>
-        </div>
+        <button class="hero-btn" @click="emit('start')">{{ t('footer.contact') }}</button>
       </div>
     </div>
   </section>
@@ -52,52 +40,13 @@ const emit = defineEmits(['start'])
   height: 100%;
 }
 
-.hero-gradient {
+.hero-bg-image {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, #0073FF 0%, #FFFFFF 100%);
-}
-
-.hero-decoration {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.deco-card {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.35);
-  border-radius: 20px;
-  transform: matrix(0.87, 0.5, -0.87, 0.5, 0, 0);
-}
-
-.deco-card-1 {
-  width: 300px;
-  height: 400px;
-  top: 20%;
-  right: 10%;
-}
-
-.deco-card-2 {
-  width: 250px;
-  height: 350px;
-  top: 35%;
-  right: 30%;
-}
-
-.deco-card-3 {
-  width: 200px;
-  height: 300px;
-  top: 50%;
-  right: 50%;
+  object-fit: cover;
 }
 
 .hero-content {
@@ -105,9 +54,7 @@ const emit = defineEmits(['start'])
   z-index: 1;
   width: 1200px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 55px;
 }
 
 .hero-left {
@@ -158,48 +105,4 @@ const emit = defineEmits(['start'])
   color: #0073FF;
 }
 
-.hero-right {
-  width: 539px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.deco-cards {
-  position: relative;
-  width: 400px;
-  height: 500px;
-}
-
-.deco-card-large,
-.deco-card-medium,
-.deco-card-small {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 20px;
-}
-
-.deco-card-large {
-  width: 300px;
-  height: 400px;
-  top: 50px;
-  right: 0;
-  transform: rotate(15deg);
-}
-
-.deco-card-medium {
-  width: 250px;
-  height: 300px;
-  top: 100px;
-  right: 80px;
-  transform: rotate(10deg);
-}
-
-.deco-card-small {
-  width: 200px;
-  height: 250px;
-  top: 150px;
-  right: 150px;
-  transform: rotate(5deg);
-}
 </style>

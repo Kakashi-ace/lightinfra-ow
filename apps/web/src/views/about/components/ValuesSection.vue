@@ -1,22 +1,29 @@
 <template>
   <section class="values-section">
     <div class="section-container">
-      <h2 class="section-title">{{ t('about.valuesTitle') }}</h2>
-      <p class="section-subtitle">{{ t('about.subtitle') }}</p>
+      <div class="section-header-row">
+        <h2 class="section-title">{{ t('about.valuesTitle') }}</h2>
+        <p class="section-subtitle">{{ t('about.valuesSubtitle') }}</p>
+      </div>
       <div class="values-grid">
         <div
           v-for="(value, index) in values"
           :key="index"
           class="value-card"
         >
-          <div class="value-icon">
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-              <circle cx="40" cy="40" r="35" fill="rgba(0,115,255,0.2)" />
-              <circle cx="40" cy="40" r="20" fill="#0073FF" />
+          <div class="value-image">
+            <img v-if="value.image" :src="value.image" alt="" />
+            <svg v-else width="100%" height="100%" viewBox="0 0 200 150" fill="none">
+              <rect width="200" height="150" fill="rgba(0,115,255,0.1)" />
+              <circle cx="100" cy="75" r="40" fill="rgba(0,115,255,0.2)" />
+              <circle cx="100" cy="75" r="20" fill="#0073FF" />
             </svg>
           </div>
-          <h3 class="value-title">{{ value.title }}</h3>
-          <p class="value-desc">{{ value.desc }}</p>
+          <div class="value-text">
+            <h3 class="value-title">{{ value.title }}</h3>
+            <p class="value-subtitle">{{ value.subtitle }}</p>
+            <p class="value-content">{{ value.content }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -31,7 +38,12 @@ const { t } = useI18n()
 defineProps({
   values: {
     type: Array,
-    default: () => []
+    default: () => ([
+      { title: '', subtitle: '', content: '', image: '' },
+      { title: '', subtitle: '', content: '', image: '' },
+      { title: '', subtitle: '', content: '', image: '' },
+      { title: '', subtitle: '', content: '', image: '' }
+    ])
   }
 })
 </script>
@@ -43,12 +55,21 @@ defineProps({
   padding: 0 20px;
 }
 
+.section-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
 .section-title {
   font-size: 48px;
   font-weight: 600;
   line-height: 58px;
   color: #121212;
-  margin: 0 0 16px 0;
+  margin: 0;
+  white-space: pre-line;
 }
 
 .section-subtitle {
@@ -56,7 +77,7 @@ defineProps({
   font-weight: 400;
   line-height: 38px;
   color: #555555;
-  margin: 0 0 60px 0;
+  margin: 0;
 }
 
 .values-section {
@@ -64,53 +85,72 @@ defineProps({
 }
 
 .values-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 41px;
+  display: flex;
+  gap: 0;
 }
 
 .value-card {
-  width: 384px;
-  height: 387px;
-  background: linear-gradient(180deg, rgba(164,205,255,0.59) 0%, rgba(0,115,255,0.59) 100%);
-  border-radius: 20px;
-  padding: 40px;
+  width: 300px;
+  min-height: 349px;
+  box-sizing: border-box;
+  padding: 32px;
+  background: #FFFFFF;
+  border: 1px solid #D1EAFF;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  transition: all 0.2s ease;
+  gap: 20px;
+}
+
+.value-card:not(:first-child) {
+  border-left: none;
 }
 
 .value-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 115, 255, 0.2);
+  background: #EEF5FF;
+  border-color: transparent;
 }
 
-.value-icon {
-  width: 80px;
-  height: 80px;
+.value-image {
+  width: 236px;
+  height: 106px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.value-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.value-text {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .value-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
-  line-height: 36px;
-  color: #FFFFFF;
+  line-height: 28px;
+  color: #121212;
   margin: 0;
-  text-align: center;
 }
 
-.value-desc {
+.value-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: #7C7C7C;
+  margin: 0 0 12px 0;
+}
+
+.value-content {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
-  color: rgba(255, 255, 255, 0.9);
+  color: #535C6E;
   margin: 0;
-  text-align: center;
+  white-space: pre-line;
 }
 </style>

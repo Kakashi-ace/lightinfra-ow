@@ -4,19 +4,15 @@ import type { PageTheme } from '@/router'
 const FOOTER_THEME_VARS: Record<PageTheme, Record<string, string>> = {
   dark: {
     '--footer-bg': '#121212',
-    '--footer-border': '#323232',
     '--footer-text': '#FFFFFF',
     '--footer-text-secondary': '#FFFFFF',
-    '--footer-link-hover': 'var(--brand-accent)',
-    '--footer-qr-bg': '#D9D9D9'
+    '--footer-link-hover': 'var(--brand-accent)'
   },
   light: {
-    '--footer-bg': '#F5F5F5',
-    '--footer-border': '#E5E5E5',
+    '--footer-bg': '#FFFFFF',
     '--footer-text': '#1E1E1E',
     '--footer-text-secondary': '#4A4A4A',
-    '--footer-link-hover': 'var(--brand-accent)',
-    '--footer-qr-bg': '#EFEFEF'
+    '--footer-link-hover': 'var(--brand-accent)'
   }
 }
 

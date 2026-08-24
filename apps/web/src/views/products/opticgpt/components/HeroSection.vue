@@ -1,19 +1,13 @@
 <template>
   <section class="hero-section">
     <div class="hero-bg">
-      <div class="hero-gradient"></div>
-      <div class="hero-decoration"></div>
+      <img class="hero-bg-image" src="/media/OpticsGPT-hero-background.png" alt="" />
     </div>
     <div class="hero-content">
       <div class="hero-left">
         <h1 class="hero-title">{{ t('product.opticsgpt.heroTitle') }}</h1>
         <p class="hero-desc">{{ t('product.opticsgpt.heroDesc') }}</p>
-        <button class="hero-btn" @click="emit('start')">{{ t('common.startUsing') }}</button>
-      </div>
-      <div class="hero-right">
-        <div class="hero-image-placeholder">
-          <img v-if="heroImage" :src="heroImage" alt="OpticsGPT" class="hero-image" />
-        </div>
+        <button class="hero-btn" @click="emit('start')">{{ t('footer.contact') }}</button>
       </div>
     </div>
   </section>
@@ -24,13 +18,6 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-defineProps({
-  heroImage: {
-    type: String,
-    default: ''
-  }
-})
-
 const emit = defineEmits(['start'])
 </script>
 
@@ -38,7 +25,7 @@ const emit = defineEmits(['start'])
 .hero-section {
   position: relative;
   width: 100%;
-  height: 643px;
+  height: 900px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,23 +40,13 @@ const emit = defineEmits(['start'])
   height: 100%;
 }
 
-.hero-gradient {
+.hero-bg-image {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, #0073FF 0%, #121212 100%);
-}
-
-.hero-decoration {
-  position: absolute;
-  top: 50%;
-  right: 10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(0,115,255,0.3) 0%, transparent 70%);
-  transform: translateY(-50%);
+  object-fit: cover;
 }
 
 .hero-content {
@@ -77,9 +54,7 @@ const emit = defineEmits(['start'])
   z-index: 1;
   width: 1200px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 55px;
 }
 
 .hero-left {
@@ -127,26 +102,4 @@ const emit = defineEmits(['start'])
   color: #0073FF;
 }
 
-.hero-right {
-  width: 646px;
-  height: 542px;
-  border-radius: 20px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.hero-image-placeholder {
-  width: 100%;
-  height: 100%;
-  background: #D9D9D9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>

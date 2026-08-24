@@ -1,17 +1,14 @@
 <template>
   <footer class="app-footer" :style="footerVars">
+    <img
+      class="footer-bg-image"
+      :class="theme === 'dark' ? 'footer-bg-image--dark' : 'footer-bg-image--light'"
+      :src="footerBgImage"
+      alt=""
+    />
     <div class="footer-container">
       <div class="footer-left">
-        <svg class="footer-logo" width="205" height="68" viewBox="0 0 112 37" fill="none">
-          <polygon points="6,0 28,0 28,26" fill="currentColor" />
-          <polygon points="0,17 22,17 22,37" fill="currentColor" />
-          <rect x="42" y="4" width="4" height="30" fill="currentColor"/>
-          <rect x="52" y="12" width="4" height="22" fill="currentColor"/>
-          <rect x="62" y="8" width="4" height="26" fill="currentColor"/>
-          <rect x="72" y="15" width="4" height="18" fill="currentColor"/>
-          <rect x="82" y="6" width="4" height="28" fill="currentColor"/>
-          <rect x="92" y="11" width="4" height="23" fill="currentColor"/>
-        </svg>
+        <img class="footer-logo" :src="footerLogoImage" alt="LightInfra" />
         <div class="contact-info">
           <div class="contact-item">
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -28,7 +25,6 @@
             <span>{{ t('footer.hrContact') }}</span>
           </div>
         </div>
-        <div class="qr-code"></div>
       </div>
       <div class="footer-right">
         <div class="footer-column">
@@ -48,7 +44,8 @@
         </div>
         <div class="footer-column">
           <h4 class="column-title">{{ t('footer.contact') }}</h4>
-          <router-link to="/contact" class="column-link">{{ t('footer.contactUs') }}</router-link>
+          <router-link to="/join" class="column-link">{{ t('nav.joinUs') }}</router-link>
+          <router-link to="/contact" class="column-link">{{ t('footer.contact') }}</router-link>
         </div>
       </div>
     </div>
@@ -71,21 +68,56 @@ const props = defineProps({
 })
 
 const footerVars = computed(() => resolveFooterVars(props.theme))
+const footerBgImage = computed(() =>
+  props.theme === 'light' ? '/media/footer-background-light.png' : '/media/footer-background-dark.png'
+)
+const footerLogoImage = computed(() =>
+  props.theme === 'light' ? '/media/lightinfra-logo-large-blue.png' : '/media/lightinfra-logo-large-white.png'
+)
 </script>
 
 <style scoped>
 .app-footer {
+  position: relative;
   width: 100%;
-  background: var(--footer-bg);
-  border-top: 1px solid var(--footer-border);
-  transition: background-color 0.25s ease, border-color 0.25s ease;
+  height: 740px;
+  box-sizing: border-box;
+  background-color: var(--footer-bg);
+  overflow: hidden;
+  transition: background-color 0.25s ease;
+}
+
+.footer-bg-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.footer-bg-image--dark {
+  height: 890px;
+  width: 1664px;
+  transform: translateX(200px);
+}
+
+.footer-bg-image--light {
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+    transform: translateY(100px);
 }
 
 .footer-container {
+  position: relative;
+  z-index: 1;
   width: 100%;
+  height: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 80px 20px;
+  box-sizing: border-box;
   display: flex;
   gap: 77px;
 }
@@ -98,7 +130,8 @@ const footerVars = computed(() => resolveFooterVars(props.theme))
 
 .footer-logo {
   display: block;
-  color: var(--footer-text);
+  width: 205px;
+  height: auto;
 }
 
 .contact-info {
@@ -113,13 +146,6 @@ const footerVars = computed(() => resolveFooterVars(props.theme))
   gap: 8px;
   font-size: 14px;
   color: var(--footer-text-secondary);
-}
-
-.qr-code {
-  width: 128px;
-  height: 128px;
-  background: var(--footer-qr-bg);
-  border-radius: 20px;
 }
 
 .footer-right {

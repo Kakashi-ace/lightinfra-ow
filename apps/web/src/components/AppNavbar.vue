@@ -1,15 +1,15 @@
 <template>
-  <header class="app-navbar" :style="navVars">
+  <header ref="navbarRef" class="app-navbar" :style="navVars">
     <div class="navbar-container">
       <!-- 左侧 Logo + 导航链接 -->
       <div class="navbar-left">
-        <router-link to="/" class="navbar-logo" aria-label="LightInfra 首页">
-          <img src="/media/logo-section.png" alt="LightInfra" />
+        <router-link to="/" class="navbar-logo" :aria-label="t('nav.homeAriaLabel')">
+          <img :src="logoSrc" alt="LightInfra" />
         </router-link>
 
-        <nav class="navbar-nav" role="navigation" aria-label="主导航">
-          <!-- 产品下拉菜单（antd, hover 弹出） -->
-          <a-dropdown class="nav-dropdown" :trigger="['hover']" placement="bottomLeft">
+        <nav class="navbar-nav" role="navigation" :aria-label="t('nav.mainNavAriaLabel')">
+          <!-- 产品下拉菜单（antd, click 弹出）；get-popup-container 让浮层挂载到导航栏内部，随导航栏一起 fixed -->
+          <a-dropdown class="nav-dropdown" :trigger="['click']" placement="bottomLeft" :get-popup-container="getPopupContainer">
             <span
               class="nav-link nav-dropdown-toggle"
               :class="{ 'nav-link-active': isProductsRoute }"
@@ -21,11 +21,11 @@
             </span>
             <template #overlay>
               <a-menu :selected-keys="[currentRoute]">
-                <a-menu-item key="/products">
-                  <router-link to="/products">{{ t('nav.productCenter') }}</router-link>
-                </a-menu-item>
                 <a-menu-item v-for="product in productLinks" :key="product.path">
-                  <router-link :to="product.path">{{ t(product.i18nKey) }}</router-link>
+                  <router-link :to="product.path" class="nav-menu-item-link">
+                    <span class="nav-menu-item-title">{{ t(product.titleKey) }}</span>
+                    <span class="nav-menu-item-desc">{{ t(product.descKey) }}</span>
+                  </router-link>
                 </a-menu-item>
               </a-menu>
             </template>
@@ -40,6 +40,29 @@
           >
             {{ t(link.i18nKey) }}
           </router-link>
+
+          <!-- 联系我们下拉菜单（antd, click 弹出） -->
+          <a-dropdown class="nav-dropdown" :trigger="['click']" placement="bottomLeft" :get-popup-container="getPopupContainer">
+            <span
+              class="nav-link nav-dropdown-toggle"
+              :class="{ 'nav-link-active': isContactRoute }"
+            >
+              <span>{{ currentContactName }}</span>
+              <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <template #overlay>
+              <a-menu :selected-keys="[currentRoute]">
+                <a-menu-item key="/contact">
+                  <router-link to="/contact">{{ t('nav.contact') }}</router-link>
+                </a-menu-item>
+                <a-menu-item key="/join">
+                  <router-link to="/join">{{ t('nav.joinUs') }}</router-link>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </nav>
       </div>
 
@@ -97,6 +120,10 @@ const props = defineProps({
 
 const isOpen = ref(false)
 
+// antd 下拉浮层默认挂载到 body，不随 fixed 导航栏滚动；挂到导航栏自身节点下，使其继承 fixed 定位
+const navbarRef = ref(null)
+const getPopupContainer = () => navbarRef.value || document.body
+
 // 滚动状态：未滚动时导航栏透明悬浮在 Hero 上；滚动过阈值后固化为带背景的实体导航条，
 // 使导航栏的可读性不再依赖 Hero 具体背景色（Hero 有深色蒙层/蓝色渐变/纯色等多种情况）
 const SCROLL_THRESHOLD = 16
@@ -114,17 +141,26 @@ onBeforeUnmount(() => {
 
 const navVars = computed(() => resolveNavbarVars(props.theme, isScrolled.value))
 
+// logo 深浅版本只跟随页面主题（props.theme），与滚动/透明状态无关——滚动只决定导航栏本体是否透明
+const logoSrc = computed(() =>
+  props.theme === 'light' ? '/media/logo-section-light.png' : '/media/logo-section-dark.png'
+)
+
 const productLinks = ref([
-  { i18nKey: 'footer.opticsgpt', path: '/products/opticsgpt' },
-  { i18nKey: 'footer.ifts', path: '/products/ifts' },
-  { i18nKey: 'footer.instruments', path: '/products/instruments' }
+  { path: '/products/opticsgpt', titleKey: 'nav.productOpticsgptTitle', descKey: 'nav.productOpticsgptDesc' },
+  { path: '/products/ifts', titleKey: 'nav.productIftsTitle', descKey: 'nav.productIftsDesc' },
+  { path: '/products/instruments', titleKey: 'nav.productInstrumentsTitle', descKey: 'nav.productInstrumentsDesc' }
 ])
 
 const otherLinks = ref([
   { i18nKey: 'footer.newsCenter', path: '/news-research' },
-  { i18nKey: 'footer.aboutLightInfra', path: '/about' },
-  { i18nKey: 'nav.contact', path: '/contact' }
+  { i18nKey: 'footer.aboutLightInfra', path: '/about' }
 ])
+
+// 加入我们/联系我们相关路由均需高亮「联系我们」导航项
+const isContactRoute = computed(() =>
+  props.currentRoute === '/join' || props.currentRoute === '/contact'
+)
 
 // 产品相关路由均需高亮「产品」导航项
 const isProductsRoute = computed(() =>
@@ -145,6 +181,11 @@ const currentProductName = computed(() => {
   if (route === '/products/instruments') return t('footer.instruments')
   return t('nav.products')
 })
+
+// 联系我们下拉按钮：在加入我们页时显示「加入我们」，否则显示「联系我们」
+const currentContactName = computed(() =>
+  props.currentRoute === '/join' ? t('nav.joinUs') : t('nav.contact')
+)
 
 // 当前语言对应的名称：语言切换按钮 / 语言下拉菜单展示具体语言名
 const currentLanguageName = computed(() =>
@@ -322,57 +363,79 @@ const vClickOutside = {
   transition: transform 0.2s ease;
 }
 
-/* antd dropdown 浮层渲染在 body 下，需用 :global 覆盖成毛玻璃（glassmorphism）风格 */
+/* antd dropdown 浮层通过 get-popup-container 挂载到导航栏内部，随导航栏主题切换深浅配色 */
 :global(.ant-dropdown .ant-dropdown-menu) {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: max-content;
+  background: var(--nav-dropdown-bg);
   border-radius: 10px;
-  padding: 8px 0;
+  padding: var(--nav-dropdown-padding);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-/* 常规项：默认字体色与顶栏导航一致（#BBBBBB），覆盖 antd 默认黑色链接色 */
+/* 常规项：默认字体色跟随导航主题，覆盖 antd 默认黑色链接色 */
 :global(.ant-dropdown .ant-dropdown-menu-item) {
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 14px;
-  color: #BBBBBB;
+  color: var(--nav-dropdown-text);
   padding: 10px 16px;
 }
 
 :global(.ant-dropdown .ant-dropdown-menu-item a) {
-  color: #BBBBBB !important;
+  color: var(--nav-dropdown-text) !important;
 }
 
 :global(.ant-dropdown .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-disabled):hover a),
 :global(.ant-dropdown .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-disabled):focus a) {
-  color: #FFFFFF !important;
+  color: var(--nav-dropdown-selected-text) !important;
 }
 
 :global(.ant-dropdown .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-disabled):hover) {
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: #FFFFFF !important;
+  background: var(--nav-dropdown-hover-bg) !important;
+  color: var(--nav-dropdown-selected-text) !important;
   border-radius: 0;
 }
 
 :global(.ant-dropdown .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-disabled):focus) {
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: #FFFFFF !important;
+  background: var(--nav-dropdown-hover-bg) !important;
+  color: var(--nav-dropdown-selected-text) !important;
 }
 
+/* 选中态 */
 :global(.ant-dropdown .ant-dropdown-menu-item-selected) {
-  background: transparent !important;
-  color: var(--brand-accent);
+  background: var(--nav-dropdown-hover-bg) !important;
+  color: var(--nav-dropdown-selected-text);
 }
 
 :global(.ant-dropdown .ant-dropdown-menu-item-selected a) {
-  color: var(--brand-accent) !important;
+  color: var(--nav-dropdown-selected-text) !important;
 }
 
 :global(.ant-dropdown .ant-dropdown-menu-item-selected:not(.ant-dropdown-menu-item-disabled):hover) {
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: var(--brand-accent) !important;
+  background: var(--nav-dropdown-hover-bg) !important;
+  color: var(--nav-dropdown-selected-text) !important;
+}
+
+/* 产品下拉菜单项：主标题 + 副标题两行展示 */
+.nav-menu-item-link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.nav-menu-item-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.nav-menu-item-desc {
+  font-size: 12px;
+  font-weight: 400;
+  color: inherit;
+  opacity: 0.6;
+  line-height: 1.4;
+  white-space: normal;
 }
 
 
@@ -398,11 +461,10 @@ const vClickOutside = {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  min-width: 120px;
-  background: #1E1E1E;
-  border: 1px solid #323232;
+  width: max-content;
+  background: var(--nav-dropdown-bg);
   border-radius: 10px;
-  padding: 8px 0;
+  padding: var(--nav-dropdown-padding);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
@@ -413,7 +475,7 @@ const vClickOutside = {
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #BBBBBB;
+  color: var(--nav-dropdown-text);
   background: transparent;
   border: none;
   text-align: left;
@@ -422,16 +484,16 @@ const vClickOutside = {
 }
 
 .dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #FFFFFF;
+  background: var(--nav-dropdown-hover-bg);
+  color: var(--nav-dropdown-selected-text);
 }
 
 .dropdown-item-active {
-  color: var(--brand-accent);
+  color: var(--nav-dropdown-selected-text);
 }
 
 .dropdown-item-active:hover {
-  color: var(--brand-accent);
+  color: var(--nav-dropdown-selected-text);
 }
 
 /* 响应式 */

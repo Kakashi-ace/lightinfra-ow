@@ -1,6 +1,8 @@
 <template>
   <section class="core-functions-section">
-    <h2 class="section-title section-title-left">{{ t('product.opticsgpt.coreFunctionsTitle') }}</h2>
+    <h2 class="section-title section-title-left">
+      <span class="title-highlight">{{ title.charAt(0) }}</span>{{ title.slice(1) }}
+    </h2>
     <div class="functions-grid">
       <div
         v-for="(func, index) in coreFunctions"
@@ -15,9 +17,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+
+const title = computed(() => t('product.opticsgpt.coreFunctionsTitle'))
 
 defineProps({
   coreFunctions: {
@@ -32,7 +37,7 @@ defineProps({
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 60px 20px 180px 20px;
   display: flex;
   flex-direction: column;
   gap: 60px;
@@ -48,6 +53,10 @@ defineProps({
 
 .section-title-left {
   text-align: left;
+}
+
+.title-highlight {
+  color: #0073FF;
 }
 
 .functions-grid {

@@ -6,37 +6,16 @@
         <p class="news-subtitle">{{ subtitle }}</p>
       </div>
       <div class="news-grid">
-        <div
+        <ArticleCard
           v-for="item in items"
           :key="item.id"
-          class="news-card"
-        >
-          <div class="news-card-image">
-            <!-- CMS 配了封面就用，否则回退到灰底占位 -->
-            <img
-              v-if="item.cover"
-              class="news-card-cover"
-              :src="item.cover"
-              :alt="item.coverAlt || item.title"
-              loading="lazy"
-            />
-            <svg v-else width="100%" height="100%" viewBox="0 0 384 216" fill="none">
-              <rect width="384" height="216" fill="#D9D9D9" />
-            </svg>
-          </div>
-          <div class="news-card-body">
-            <div class="news-card-meta">
-              <span class="news-card-tag">{{ item.tag }}</span>
-              <span class="news-card-date">{{ item.date }}</span>
-            </div>
-            <h3 class="news-card-title">{{ item.title }}</h3>
-            <p class="news-card-excerpt">{{ item.excerpt }}</p>
-            <button class="news-card-btn" @click="emit('readMore', item.id)">{{ t('common.readMore') }}</button>
-          </div>
-        </div>
+          :item="item"
+          variant="light"
+          @read-more="emit('readMore', item)"
+        />
       </div>
-      <div class="news-footer">
-        <button class="load-more-btn" @click="emit('loadMore')">{{ t('common.readArticle') }}</button>
+      <div v-if="hasMore" class="news-footer">
+        <button class="load-more-btn" :disabled="loading" @click="emit('loadMore')">{{ t('common.loadMore') }}</button>
       </div>
     </div>
   </section>
@@ -44,6 +23,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import ArticleCard from '@/components/ArticleCard.vue'
 
 const { t } = useI18n()
 
@@ -55,6 +35,16 @@ defineProps({
   items: {
     type: Array,
     default: () => []
+  },
+  // 是否还有下一页；为 false 时不展示"加载更多"按钮
+  hasMore: {
+    type: Boolean,
+    default: false
+  },
+  // 是否正在加载下一页，用于禁用按钮防止重复点击
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -100,113 +90,6 @@ const emit = defineEmits(['readMore', 'loadMore'])
   margin-bottom: 60px;
 }
 
-.news-card {
-  width: 100%;
-  height: 433px;
-  background: #FFFFFF;
-  border: 1px solid #D3D3D3;
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: border-color 0.2s ease;
-}
-
-.news-card:hover {
-  border-color: #0073FF;
-}
-
-.news-card-image {
-  width: 100%;
-  height: 216px;
-  flex-shrink: 0;
-  background: #D9D9D9;
-}
-
-/* 封面比例不定，统一裁切填满，避免卡片高度被撑变 */
-.news-card-cover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.news-card-body {
-  flex: 1;
-  padding: 21px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.news-card-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.news-card-tag {
-  display: inline-block;
-  padding: 5px 10px;
-  background: #D1EAFF;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: 400;
-  color: #121212;
-}
-
-.news-card-date {
-  font-size: 12px;
-  font-weight: 400;
-  color: #121212;
-}
-
-.news-card-title {
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 28px;
-  color: #121212;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.news-card-excerpt {
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 14px;
-  color: #121212;
-  margin: 0;
-  flex: 1;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.news-card-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 96px;
-  height: 36px;
-  background: #FFFFFF;
-  border: 1px solid #121212;
-  border-radius: 30px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #121212;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.news-card-btn:hover {
-  border-color: #0073FF;
-  color: #0073FF;
-}
-
 .news-footer {
   display: flex;
   justify-content: center;
@@ -231,5 +114,10 @@ const emit = defineEmits(['readMore', 'loadMore'])
 .load-more-btn:hover {
   border-color: #0073FF;
   color: #0073FF;
+}
+
+.load-more-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 </style>

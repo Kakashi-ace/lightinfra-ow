@@ -2,37 +2,28 @@
   <div class="ifts-product-view">
     <HeroSection @start="handleStart" />
     <DescSection />
-    <FeaturesSection :features="pageData.features" />
+    <ReasonSection @start="handleStart" />
     <CodeSection @start="handleStart" />
-    <CtaSection @start="handleStart" />
+    <CtaSection :title="t('product.ifts.ctaTitle')" :button-text="t('footer.contact')" @start="handleStart" />
   </div>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import HeroSection from './components/HeroSection.vue'
 import DescSection from './components/DescSection.vue'
-import FeaturesSection from './components/FeaturesSection.vue'
+import ReasonSection from './components/ReasonSection.vue'
 import CodeSection from './components/CodeSection.vue'
-import CtaSection from './components/CtaSection.vue'
+import CtaSection from '@/components/CtaSection.vue'
 
-defineProps({
-  pageData: {
-    type: Object,
-    default: () => ({
-      features: [
-        { title: 'PYTHON开发', desc: '易于上手，可根据自身需求扩展其功能' },
-        { title: '开源免费', desc: '开源通信工具包，助力光通信智能化研究' },
-        { title: '高效仿真', desc: 'GPU并行计算与AI信道模型，加速智能仿真平台' },
-        { title: '智能算法', desc: '聚焦光通信领域前沿，融合AI框架' }
-      ]
-    })
-  }
-})
+const { t } = useI18n()
+const router = useRouter()
 
-const emit = defineEmits(['navigate', 'start', 'tabChange'])
+const emit = defineEmits(['navigate', 'tabChange'])
 
 const handleStart = () => {
-  emit('start', 'ifts')
+  router.push('/contact')
 }
 </script>
 

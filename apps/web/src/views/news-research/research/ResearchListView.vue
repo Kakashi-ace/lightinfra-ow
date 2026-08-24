@@ -5,7 +5,10 @@
     <ArticleListSection
       :subtitle="t('news.researchSectionSubtitle')"
       :items="list"
+      :has-more="hasMore"
+      :loading="loadingMore"
       @read-more="goDetail"
+      @load-more="loadMore"
     />
   </div>
 </template>
@@ -15,16 +18,17 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import NewsPageHeader from '../components/NewsPageHeader.vue'
 import ArticleListSection from '../components/ArticleListSection.vue'
-import { useArticleList } from '@/composables/useArticleList'
+import { useResearchList } from '@/composables/useResearchList'
 
 const router = useRouter()
 const { t } = useI18n()
 
-const { featured, list } = useArticleList('research')
+const { featured, list, hasMore, loadingMore, loadMore } = useResearchList()
 
-const goDetail = (id) => {
+const goDetail = (itemOrId) => {
+  const id = typeof itemOrId === 'object' && itemOrId !== null ? itemOrId.id : itemOrId
   if (!id) return
-  router.push({ name: 'news-detail', params: { id } })
+  router.push({ name: 'research-detail', params: { id } })
 }
 </script>
 

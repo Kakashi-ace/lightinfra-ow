@@ -2,7 +2,7 @@
   <section class="advantages-section">
     <div class="advantages-header">
       <h2 class="section-title-left">{{ t('product.instrument.advantagesTitle') }}</h2>
-      <button class="advantage-btn" @click="emit('start')">{{ t('common.startUsing') }}</button>
+      <button class="advantage-btn" @click="emit('start')">{{ t('footer.contact') }}</button>
     </div>
     <div class="advantages-grid">
       <div
@@ -85,8 +85,7 @@ const emit = defineEmits(['start'])
 
 .advantages-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, auto);
+  grid-template-columns: repeat(6, 1fr);
   gap: 20px;
 }
 
@@ -103,24 +102,26 @@ const emit = defineEmits(['start'])
   transform: translateY(-4px);
 }
 
-/* 卡片1: 蓝色背景，宽584px */
+/* 卡片1: 蓝色背景，第一行左半 */
 .advantage-card-1 {
-  grid-column: span 2;
+  grid-column: 1 / 4;
+  grid-row: 1;
   background: #0073FF;
   color: #FFFFFF;
-  width: 100%;
 }
 
-/* 卡片2: 深色背景，宽562px */
+/* 卡片2: 深色背景，第一行右半 */
 .advantage-card-2 {
-  grid-column: span 2;
+  grid-column: 4 / 7;
+  grid-row: 1;
   background: linear-gradient(180deg, #202020 0%, rgba(54,63,74,0.5) 100%);
   color: #D3D3D3;
-  width: 100%;
 }
 
-/* 卡片3: 白色背景，浅色文字 */
+/* 卡片3: 白色背景，第二行左三分之一 */
 .advantage-card-3 {
+  grid-column: 1 / 3;
+  grid-row: 2;
   background: #FFFFFF;
   color: #323232;
 }
@@ -130,14 +131,18 @@ const emit = defineEmits(['start'])
   color: #323232;
 }
 
-/* 卡片4: 深色背景 */
+/* 卡片4: 深色背景，第二行中间三分之一 */
 .advantage-card-4 {
+  grid-column: 3 / 5;
+  grid-row: 2;
   background: linear-gradient(180deg, #202020 0%, rgba(54,63,74,0.5) 100%);
   color: #D3D3D3;
 }
 
-/* 卡片5: 蓝色背景 */
+/* 卡片5: 蓝色背景，第二行右三分之一 */
 .advantage-card-5 {
+  grid-column: 5 / 7;
+  grid-row: 2;
   background: #0073FF;
   color: #FFFFFF;
 }

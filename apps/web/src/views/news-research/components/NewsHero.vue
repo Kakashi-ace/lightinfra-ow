@@ -3,7 +3,13 @@
     <div class="hero-container">
       <div class="hero-left">
         <div class="hero-image-placeholder">
-          <svg width="100%" height="100%" viewBox="0 0 690 441" fill="none">
+          <img
+            v-if="featured.cover"
+            class="hero-cover"
+            :src="featured.cover"
+            :alt="featured.coverAlt || featured.title"
+          />
+          <svg v-else width="100%" height="100%" viewBox="0 0 690 441" fill="none">
             <rect width="690" height="441" fill="#D9D9D9" />
           </svg>
         </div>
@@ -26,7 +32,7 @@ const { t } = useI18n()
 defineProps({
   featured: {
     type: Object,
-    default: () => ({ tag: '', title: '', date: '' })
+    default: () => ({ tag: '', title: '', date: '', cover: null, coverAlt: '' })
   }
 })
 
@@ -58,6 +64,13 @@ const emit = defineEmits(['start'])
 .hero-image-placeholder {
   width: 100%;
   height: 100%;
+}
+
+.hero-cover {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .hero-right {

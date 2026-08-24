@@ -1,30 +1,31 @@
 <template>
   <div class="news-list-view">
-    <NewsPageHeader :featured="featured" @start="goDetail(featured.id)" />
+    <NewsPageHeader :featured="featured" @start="openExternal(featured.externalUrl)" />
 
     <ArticleListSection
       :subtitle="t('news.sectionSubtitle')"
       :items="list"
-      @read-more="goDetail"
+      :has-more="hasMore"
+      :loading="loadingMore"
+      @read-more="openExternal($event.externalUrl)"
+      @load-more="loadMore"
     />
   </div>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import NewsPageHeader from '../components/NewsPageHeader.vue'
 import ArticleListSection from '../components/ArticleListSection.vue'
-import { useArticleList } from '@/composables/useArticleList'
+import { useNewsList } from '@/composables/useNewsList'
 
-const router = useRouter()
 const { t } = useI18n()
 
-const { featured, list } = useArticleList('news')
+const { featured, list, hasMore, loadingMore, loadMore } = useNewsList()
 
-const goDetail = (id) => {
-  if (!id) return
-  router.push({ name: 'news-detail', params: { id } })
+const openExternal = (url) => {
+  if (!url) return
+  window.open(url, '_blank', 'noopener')
 }
 </script>
 

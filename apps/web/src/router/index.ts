@@ -1,27 +1,29 @@
+import { watch } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteLocationNormalized } from 'vue-router'
+import i18n from '@/i18n'
 import AppLayout from '@/layouts/AppLayout.vue'
 import HomeView from '@/views/home/HomeView.vue'
 import ProductsView from '@/views/products/ProductsView.vue'
-import ProductsListView from '@/views/products/list/ProductsListView.vue'
 import OpticsGPTProductView from '@/views/products/opticgpt/OpticsGPTProductView.vue'
 import IFTSProductView from '@/views/products/ifts/IftsProductView.vue'
 import InstrumentProductView from '@/views/products/instrument/InstrumentProductView.vue'
 import AboutView from '@/views/about/AboutView.vue'
-import ContactView from '@/views/contact/ContactView.vue'
+import JoinUsView from '@/views/contact/join/JoinUsView.vue'
+import ContactUsView from '@/views/contact/contact-us/ContactUsView.vue'
 import NewsView from '@/views/news-research/NewsResearchView.vue'
 import NewsListView from '@/views/news-research/news/NewsListView.vue'
 import ResearchListView from '@/views/news-research/research/ResearchListView.vue'
 import ArticleDetailView from '@/views/news-research/detail/ArticleDetailView.vue'
 
-// 让 to.meta.title 有类型，而不是 any
+// 让 to.meta.titleKey 有类型，而不是 any
 // 页面主题：驱动导航栏/页脚配色，定义放在这里作为唯一来源，theme/ 目录下的配色表都引用它
 export type PageTheme = 'dark' | 'light'
 
 declare module 'vue-router' {
   interface RouteMeta {
-    /** 浏览器标签页标题。嵌套路由下取最深一层定义了此项的 meta */
-    title?: string
+    /** 浏览器标签页标题对应的 i18n key（相对 `meta.` 命名空间），随语言切换实时更新。嵌套路由下取最深一层定义了此项的 meta */
+    titleKey?: string
     /** 页面主题，驱动导航栏/页脚配色。嵌套路由下取最深一层定义了此项的 meta，未定义时按 dark 处理 */
     theme?: PageTheme
   }
@@ -44,7 +46,7 @@ const router = createRouter({
           path: '',
           name: 'home',
           component: HomeView,
-          meta: { title: '首页 - LightInfra', theme: 'dark' }
+          meta: { titleKey: 'home', theme: 'dark' }
         },
         {
           path: 'products',
@@ -52,32 +54,22 @@ const router = createRouter({
           meta: { theme: 'dark' },
           children: [
             {
-              path: '',
-              redirect: { name: 'products-list' }
-            },
-            {
-              path: 'list',
-              name: 'products-list',
-              component: ProductsListView,
-              meta: { title: '产品 - LightInfra' }
-            },
-            {
               path: 'opticsgpt',
               name: 'opticsgpt-product',
               component: OpticsGPTProductView,
-              meta: { title: 'OpticsGPT - 产品 - LightInfra' }
+              meta: { titleKey: 'opticsgptProduct' }
             },
             {
               path: 'ifts',
               name: 'ifts-product',
               component: IFTSProductView,
-              meta: { title: 'IFTS - 产品 - LightInfra' }
+              meta: { titleKey: 'iftsProduct' }
             },
             {
               path: 'instruments',
               name: 'instrument-product',
               component: InstrumentProductView,
-              meta: { title: '智能仪器仪表 - 产品 - LightInfra' }
+              meta: { titleKey: 'instrumentProduct' }
             }
           ]
         },
@@ -85,13 +77,19 @@ const router = createRouter({
           path: 'about',
           name: 'about',
           component: AboutView,
-          meta: { title: '关于我们 - LightInfra', theme: 'light' }
+          meta: { titleKey: 'about', theme: 'light' }
+        },
+        {
+          path: 'join',
+          name: 'join',
+          component: JoinUsView,
+          meta: { titleKey: 'join', theme: 'light' }
         },
         {
           path: 'contact',
           name: 'contact',
-          component: ContactView,
-          meta: { title: '联系我们 - LightInfra', theme: 'light' }
+          component: ContactUsView,
+          meta: { titleKey: 'contact', theme: 'light' }
         },
         {
           path: 'news-research',
@@ -106,19 +104,19 @@ const router = createRouter({
               path: 'news-list',
               name: 'news-list',
               component: NewsListView,
-              meta: { title: '新闻动态 - LightInfra' }
+              meta: { titleKey: 'newsList' }
             },
             {
               path: 'research-list',
               name: 'research-list',
               component: ResearchListView,
-              meta: { title: '前沿研究 - LightInfra' }
+              meta: { titleKey: 'researchList' }
             },
             {
               path: 'detail/:id',
-              name: 'news-detail',
+              name: 'research-detail',
               component: ArticleDetailView,
-              meta: { title: '研究详情 - LightInfra' }
+              meta: { titleKey: 'researchDetail' }
             }
           ]
         }
@@ -127,11 +125,11 @@ const router = createRouter({
   ]
 })
 
-// 从匹配到的路由记录中，取最深一层定义了 title 的 meta，支持嵌套路由标题继承
+// 从匹配到的路由记录中，取最深一层定义了 titleKey 的 meta，支持嵌套路由标题继承
 function resolvePageTitle(to: RouteLocationNormalized): string {
   for (let i = to.matched.length - 1; i >= 0; i--) {
-    const title = to.matched[i]?.meta?.title
-    if (title) return title
+    const titleKey = to.matched[i]?.meta?.titleKey
+    if (titleKey) return `${i18n.global.t(`meta.${titleKey}`)} - ${DEFAULT_TITLE}`
   }
   return DEFAULT_TITLE
 }
@@ -145,9 +143,17 @@ export function resolvePageTheme(to: RouteLocationNormalized): PageTheme {
   return 'dark'
 }
 
-// 每次路由切换完成后，实时更新浏览器标签页标题
+// 每次路由切换完成后，实时更新浏览器标签页标题；同时记住当前路由，供语言切换时重新解析标题用
+let currentRoute: RouteLocationNormalized | null = null
+
 router.afterEach((to) => {
+  currentRoute = to
   document.title = resolvePageTitle(to)
+})
+
+// 纯切换语言（无路由跳转）时，afterEach 不会重新触发，这里单独监听 locale 变化来刷新标签页标题
+watch(i18n.global.locale, () => {
+  if (currentRoute) document.title = resolvePageTitle(currentRoute)
 })
 
 export default router

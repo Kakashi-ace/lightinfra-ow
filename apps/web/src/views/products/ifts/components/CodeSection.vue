@@ -2,22 +2,10 @@
   <section class="code-section">
     <div class="code-header">
       <h2 class="section-title-left">{{ t('product.ifts.codeTitle') }}</h2>
-      <button class="code-btn" @click="emit('start')">{{ t('common.startUsing') }}</button>
+      <button class="code-btn" @click="emit('start')">{{ t('footer.contact') }}</button>
     </div>
     <div class="code-placeholder">
-      <div class="code-mock">
-        <div class="code-line"><span class="code-keyword">import</span> ifts</div>
-        <div class="code-line"><span class="code-keyword">from</span> IFTS.example <span class="code-keyword">import</span> signal</div>
-        <div class="code-line"></div>
-        <div class="code-line comment">{{ t('product.ifts.codeComment1') }}</div>
-        <div class="code-line">ch_para = ifts.channel_para(</div>
-        <div class="code-line">    rand_seed=<span class="code-number">42</span>,</div>
-        <div class="code-line">    simu_configs=<span class="code-string">'./config.yaml'</span></div>
-        <div class="code-line">)</div>
-        <div class="code-line"></div>
-        <div class="code-line comment">{{ t('product.ifts.codeComment2') }}</div>
-        <div class="code-line">output = ch_para.forward(signal)</div>
-      </div>
+      <img class="code-structure-image" src="/media/IFTS-structure.png" alt="IFTS" />
     </div>
   </section>
 </template>
@@ -79,37 +67,16 @@ const emit = defineEmits(['start'])
 
 .code-placeholder {
   width: 100%;
-  height: 676px;
-  background: #1E1E1E;
   border-radius: 20px;
   padding: 40px;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
 }
 
-.code-mock {
-  font-family: 'Consolas', 'Monaco', monospace;
-  font-size: 18px;
-  line-height: 1.8;
-  color: #D4D4D4;
-}
-
-.code-line {
-  margin-bottom: 8px;
-}
-
-.code-keyword {
-  color: #C586C0;
-}
-
-.code-number {
-  color: #B5CEA8;
-}
-
-.code-string {
-  color: #CE9178;
-}
-
-.comment {
-  color: #6A9955;
+.code-structure-image {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 </style>
