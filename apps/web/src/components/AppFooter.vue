@@ -80,7 +80,7 @@ const footerLogoImage = computed(() =>
 .app-footer {
   position: relative;
   width: 100%;
-  height: 740px;
+  height: 520px;
   box-sizing: border-box;
   background-color: var(--footer-bg);
   overflow: hidden;
