@@ -104,9 +104,7 @@ const footerLogoImage = computed(() =>
 .footer-bg-image--light {
   left: 0;
   width: 100%;
-  height: 100%;
   object-fit: cover;
-    transform: translateY(100px);
 }
 
 .footer-container {

@@ -4,11 +4,6 @@
       <h1 class="hero-title">{{ t('recruit.heroTitle') }}</h1>
       <p class="hero-subtitle">{{ t('recruit.heroSubtitle') }}</p>
     </div>
-    <div class="hero-decoration">
-      <div class="decoration-circle circle-1"></div>
-      <div class="decoration-circle circle-2"></div>
-      <div class="decoration-circle circle-3"></div>
-    </div>
   </div>
 </template>
 
@@ -22,8 +17,7 @@ const { t } = useI18n()
 .hero-section {
   width: 100%;
   height: 400px;
-  background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(102,102,102,0) 100%),
-              linear-gradient(180deg, #0073FF 0%, #FFFFFF 100%);
+  background: url('/media/contact-hero-background.png') center / cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,41 +48,5 @@ const { t } = useI18n()
   line-height: 32px;
   color: #555555;
   margin: 0;
-}
-
-.hero-decoration {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-
-.decoration-circle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.circle-1 {
-  width: 300px;
-  height: 300px;
-  top: -100px;
-  right: 10%;
-}
-
-.circle-2 {
-  width: 200px;
-  height: 200px;
-  top: 20%;
-  right: 5%;
-}
-
-.circle-3 {
-  width: 150px;
-  height: 150px;
-  bottom: 10%;
-  left: 5%;
 }
 </style>
