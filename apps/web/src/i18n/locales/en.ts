@@ -63,6 +63,31 @@ const messages: MessageSchema = {
     prodNetOpm: 'Network Operations',
     opticsgptTitle: 'OpticsGPT',
     opticsgptDesc: 'A domain-specific large model for the optical industry, delivering professional intelligent capabilities for research, development and engineering applications',
+    aiOpticsTitle: 'AI Is Entering Every Stage of Optics',
+    aiOpticsNavigation: 'Intelligent optics carousel navigation',
+    aiOpticsPrevious: 'Previous item',
+    aiOpticsNext: 'Next item',
+    aiOpticsSlideStatus: 'Item {current} of {total}: {title}',
+    aiOpticsSlides: {
+      research: {
+        name: 'Optical R&D',
+        title: 'Optical R&D placeholder',
+        description: 'Final visuals and business copy will replace this placeholder after the design delivery.',
+        alt: 'Placeholder visual for the optical R&D carousel item'
+      },
+      testing: {
+        name: 'Optical Testing',
+        title: 'Optical testing placeholder',
+        description: 'Final visuals and business copy will replace this placeholder after the design delivery.',
+        alt: 'Placeholder visual for the optical testing carousel item'
+      },
+      operations: {
+        name: 'Optical Operations',
+        title: 'Optical operations placeholder',
+        description: 'Final visuals and business copy will replace this placeholder after the design delivery.',
+        alt: 'Placeholder visual for the optical operations carousel item'
+      }
+    },
     researchTitle: 'Latest Research',
     researchDesc: 'Frontier insights · Academic research · Engineering practice',
     articleTag: 'Article',

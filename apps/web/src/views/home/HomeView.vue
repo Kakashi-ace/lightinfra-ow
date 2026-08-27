@@ -2,6 +2,7 @@
   <div class="home">
     <HeroSection />
     <PlatformSection />
+    <OpticsIntelligenceSection />
     <ProductCarouselSection />
     <ResearchSection />
     <NewsSection />
@@ -18,7 +19,8 @@
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import HeroSection from './components/HeroSection.vue'
-import PlatformSection from './components/PlatformSection.vue'
+import PlatformSection from './components/platform/PlatformSection.vue'
+import OpticsIntelligenceSection from './components/optics-intelligence/OpticsIntelligenceSection.vue'
 import ProductCarouselSection from './components/ProductCarouselSection.vue'
 import ResearchSection from './components/ResearchSection.vue'
 import NewsSection from './components/NewsSection.vue'

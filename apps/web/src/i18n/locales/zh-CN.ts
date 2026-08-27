@@ -62,6 +62,31 @@ const messages = {
     prodNetOpm: '网络运维',
     opticsgptTitle: 'OpticsGPT',
     opticsgptDesc: '面向光学产业的垂域大模型，为科研、研发与工程应用提供专业智能能力',
+    aiOpticsTitle: 'AI，正在进入光学的每一个环节',
+    aiOpticsNavigation: '智能光学环节轮播导航',
+    aiOpticsPrevious: '上一项',
+    aiOpticsNext: '下一项',
+    aiOpticsSlideStatus: '第 {current} 项，共 {total} 项：{title}',
+    aiOpticsSlides: {
+      research: {
+        name: '光学研发',
+        title: '光学研发占位内容',
+        description: '正式视觉素材与业务文案将在后续设计交付后替换。',
+        alt: '光学研发轮播图占位画面'
+      },
+      testing: {
+        name: '光学测试',
+        title: '光学测试占位内容',
+        description: '正式视觉素材与业务文案将在后续设计交付后替换。',
+        alt: '光学测试轮播图占位画面'
+      },
+      operations: {
+        name: '光学运维',
+        title: '光学运维占位内容',
+        description: '正式视觉素材与业务文案将在后续设计交付后替换。',
+        alt: '光学运维轮播图占位画面'
+      }
+    },
     researchTitle: '最新研究',
     researchDesc: '前言技术解读·学术研究·工程实践',
     articleTag: '文章',
