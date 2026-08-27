@@ -8,34 +8,40 @@
 
       <div class="platform-flow">
         <article class="flow-step" data-animation="step">
-          <div class="step-index">01</div>
-          <AiTrainingGraphic />
+          <div class="graphic-frame">
+            <AiTrainingGraphic />
+          </div>
           <h3>{{ t('home.gptLabel') }}</h3>
-          <p>{{ t('home.gptCap') }}</p>
         </article>
 
-        <svg class="flow-connector" viewBox="0 0 118 28" aria-hidden="true">
-          <path data-animation="connector" d="M4 14h103" />
-          <path data-animation="connector-arrow" d="m98 5 12 9-12 9" />
-        </svg>
-
-        <article class="flow-step flow-step--featured" data-animation="step">
-          <div class="step-index">02</div>
-          <OpticalSimulationGraphic />
-          <h3>{{ t('home.rdLabel') }}</h3>
-          <p>{{ t('home.rdOpticalDesign') }} · {{ t('home.rdDeviceSim') }}</p>
-        </article>
-
-        <svg class="flow-connector" viewBox="0 0 118 28" aria-hidden="true">
-          <path data-animation="connector" d="M4 14h103" />
-          <path data-animation="connector-arrow" d="m98 5 12 9-12 9" />
-        </svg>
+        <div class="flow-connector" data-connector="1" aria-hidden="true">
+          <svg viewBox="0 0 96 24">
+            <path data-animation="connector-line" d="M4 12H92" />
+            <circle data-animation="connector-start" cx="4" cy="12" r="3.5" />
+            <circle data-animation="connector-end" cx="92" cy="12" r="3.5" />
+          </svg>
+        </div>
 
         <article class="flow-step" data-animation="step">
-          <div class="step-index">03</div>
-          <ProductionLineGraphic />
+          <div class="graphic-frame">
+            <OpticalSimulationGraphic />
+          </div>
+          <h3>{{ t('home.rdLabel') }}</h3>
+        </article>
+
+        <div class="flow-connector" data-connector="2" aria-hidden="true">
+          <svg viewBox="0 0 96 24">
+            <path data-animation="connector-line" d="M4 12H92" />
+            <circle data-animation="connector-start" cx="4" cy="12" r="3.5" />
+            <circle data-animation="connector-end" cx="92" cy="12" r="3.5" />
+          </svg>
+        </div>
+
+        <article class="flow-step" data-animation="step">
+          <div class="graphic-frame">
+            <ProductionLineGraphic />
+          </div>
           <h3>{{ t('home.prodLabel') }}</h3>
-          <p>{{ t('home.prodSpectrumCal') }} · {{ t('home.prodWavefrontTest') }}</p>
         </article>
       </div>
     </div>
@@ -46,9 +52,9 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePlatformDiagramAnimation } from '@/composables/usePlatformDiagramAnimation'
-import AiTrainingGraphic from './intelligence/AiTrainingGraphic.vue'
-import OpticalSimulationGraphic from './intelligence/OpticalSimulationGraphic.vue'
-import ProductionLineGraphic from './intelligence/ProductionLineGraphic.vue'
+import AiTrainingGraphic from './components/AiTrainingGraphic.vue'
+import OpticalSimulationGraphic from './components/OpticalSimulationGraphic.vue'
+import ProductionLineGraphic from './components/ProductionLineGraphic.vue'
 
 const { t } = useI18n()
 const sectionRoot = ref<HTMLElement | null>(null)
@@ -58,8 +64,8 @@ usePlatformDiagramAnimation(sectionRoot)
 
 <style scoped>
 .platform-section {
+  box-sizing: border-box;
   width: 100%;
-  min-height: 760px;
   padding: 120px 0 100px;
   background: #121212;
 }
@@ -96,7 +102,7 @@ usePlatformDiagramAnimation(sectionRoot)
 
 .platform-flow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 82px minmax(0, 1fr) 82px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr) 96px minmax(0, 1fr);
   align-items: center;
 }
 
@@ -104,22 +110,12 @@ usePlatformDiagramAnimation(sectionRoot)
   position: relative;
   min-width: 0;
   padding: 22px 20px 28px;
-  border: 1px solid #323a46;
-  background: linear-gradient(180deg, #171b21 0%, #101215 100%);
 }
 
-.flow-step--featured {
-  border-color: #3b82f6;
-  box-shadow: 0 0 32px rgba(59, 130, 246, 0.14);
-}
-
-.step-index {
-  position: absolute;
-  top: 18px;
-  left: 20px;
-  color: #4f88ce;
-  font-size: 12px;
-  font-weight: 600;
+.graphic-frame {
+  width: min(256px, 100%);
+  aspect-ratio: 1;
+  margin: 0 auto;
 }
 
 .flow-step h3 {
@@ -140,18 +136,34 @@ usePlatformDiagramAnimation(sectionRoot)
 }
 
 .flow-connector {
+  position: relative;
+  width: 96px;
+  height: 24px;
+}
+
+.flow-connector svg {
   display: block;
-  width: 82px;
+  width: 100%;
+  height: 100%;
   overflow: visible;
   fill: none;
   stroke: #3b82f6;
-  stroke-width: 3;
+  stroke-width: 2;
   stroke-linecap: round;
-  stroke-linejoin: round;
+}
+
+.flow-connector [data-animation="connector-dot"] {
+  fill: #60a5fa;
+  stroke: none;
+}
+
+.flow-connector [data-animation^="connector-"] {
+  vector-effect: non-scaling-stroke;
 }
 
 @media (max-width: 1200px) {
   .platform-section {
+    height: auto;
     min-height: auto;
     padding: 96px 0 72px;
   }
