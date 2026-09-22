@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
-// 开发期 Strapi 地址。只用于 vite proxy 转发，不会进入构建产物。
-const STRAPI_ORIGIN = 'http://localhost:1337'
+// 开发期 Strapi 地址。支持环境变量覆盖，默认指向 13370 端口。只用于 vite proxy 转发，不会进入构建产物。
+const STRAPI_ORIGIN = process.env.VITE_STRAPI_ORIGIN || 'http://localhost:13370'
 
 export default defineConfig({
   plugins: [vue()],

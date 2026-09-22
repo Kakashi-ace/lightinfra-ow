@@ -11,7 +11,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
     );
   }
 
-  const connections: Record<Core.Config.Database.ClientKind, Core.Config.Database['connection']> = {
+  const connections: Record<Core.Config.Database.ClientKind, any> = {
     mysql: {
       client: 'mysql',
       connection: {
@@ -21,6 +21,8 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
         user: env('DATABASE_USERNAME', 'strapi'),
         password: env('DATABASE_PASSWORD', 'strapi'),
         ssl: env.bool('DATABASE_SSL', false) && {
+          minVersion: 'TLSv1.2',
+          maxVersion: 'TLSv1.2',
           key: env('DATABASE_SSL_KEY', undefined),
           cert: env('DATABASE_SSL_CERT', undefined),
           ca: env('DATABASE_SSL_CA', undefined),
