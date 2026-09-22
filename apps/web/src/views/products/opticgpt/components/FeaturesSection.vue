@@ -7,7 +7,7 @@
     <div class="features-video">
       <VideoPlayer
         class="feature-video-player vjs-big-play-centered"
-        :sources="[{ src: '/media/product-feature.mp4', type: 'video/mp4' }]"
+        :sources="[{ src: 'https://pub-15bcedb25bd747a8ae4057ca8120bf26.r2.dev/media/optics-gpt-promo.mp4', type: 'video/mp4' }]"
         :loop="true"
         :muted="true"
         autoplay="muted"
